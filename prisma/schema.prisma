@@ -1,0 +1,138 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+// role: "ADMIN" | "STUDENT"
+model User {
+  id           String   @id @default(cuid())
+  name         String
+  phone        String   @unique
+  email        String?  @unique
+  passwordHash String
+  role         String   @default("STUDENT")
+  createdAt    DateTime @default(now())
+
+  assignments      ProgramAssignment[]
+  orders           Order[]
+  sentMessages     Message[]           @relation("MessageSender")
+  receivedMessages Message[]           @relation("MessageReceiver")
+}
+
+model Program {
+  id            String   @id @default(cuid())
+  title         String
+  description   String
+  level         String
+  durationWeeks Int
+  content       String
+  coverImage    String?
+  createdAt     DateTime @default(now())
+
+  assignments ProgramAssignment[]
+}
+
+model ProgramAssignment {
+  id         String   @id @default(cuid())
+  userId     String
+  programId  String
+  assignedAt DateTime @default(now())
+  notes      String?
+
+  user    User    @relation(fields: [userId], references: [id])
+  program Program @relation(fields: [programId], references: [id])
+}
+
+// type: "IMAGE" | "VIDEO"
+model GalleryItem {
+  id        String   @id @default(cuid())
+  type      String   @default("IMAGE")
+  url       String?
+  caption   String
+  takenAt   DateTime @default(now())
+  createdAt DateTime @default(now())
+}
+
+model BlogPost {
+  id          String    @id @default(cuid())
+  title       String
+  slug        String    @unique
+  excerpt     String
+  content     String
+  coverImage  String?
+  published   Boolean   @default(true)
+  publishedAt DateTime?
+  createdAt   DateTime  @default(now())
+}
+
+model Testimonial {
+  id           String   @id @default(cuid())
+  studentName  String
+  studentImage String?
+  rating       Int      @default(5)
+  content      String
+  approved     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+}
+
+// type: "ONLINE" | "IN_PERSON"
+// features stored as a JSON-encoded string array (SQLite has no scalar lists)
+model Package {
+  id           String   @id @default(cuid())
+  title        String
+  description  String
+  price        Int
+  periodLabel  String
+  features     String
+  type         String   @default("ONLINE")
+  highlighted  Boolean  @default(false)
+  createdAt    DateTime @default(now())
+
+  orders Order[]
+}
+
+// status: "PENDING" | "PAID" | "FAILED"
+model Order {
+  id                String   @id @default(cuid())
+  userId            String
+  packageId         String
+  amount            Int
+  status            String   @default("PENDING")
+  zarinpalAuthority String?
+  zarinpalRefId     String?
+  createdAt         DateTime @default(now())
+
+  user    User    @relation(fields: [userId], references: [id])
+  package Package @relation(fields: [packageId], references: [id])
+}
+
+// mode: "online" | "in-person" | "not-sure"
+// status: "NEW" | "CONTACTED" | "CLOSED"
+model Lead {
+  id        String   @id @default(cuid())
+  name      String
+  phone     String
+  message   String
+  mode      String   @default("online")
+  status    String   @default("NEW")
+  createdAt DateTime @default(now())
+}
+
+model Message {
+  id         String   @id @default(cuid())
+  senderId   String
+  receiverId String
+  content    String
+  read       Boolean  @default(false)
+  createdAt  DateTime @default(now())
+
+  sender   User @relation("MessageSender", fields: [senderId], references: [id])
+  receiver User @relation("MessageReceiver", fields: [receiverId], references: [id])
+}
