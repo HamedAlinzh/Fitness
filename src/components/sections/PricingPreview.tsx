@@ -7,8 +7,7 @@ import { prisma } from "@/lib/prisma";
 
 export default async function PricingPreview() {
   const plans = await prisma.package.findMany({
-    where: { type: "ONLINE" },
-    orderBy: { price: "asc" },
+    orderBy: { priceToman: "asc" },
     take: 3,
   });
 
@@ -20,7 +19,7 @@ export default async function PricingPreview() {
         <SectionHeading
           eyebrow="پلن‌ها و قیمت‌گذاری"
           title="پلنی که مناسب خودته رو انتخاب کن"
-          description="قیمت‌ها به تومان و برای مربیگری آنلاین است؛ پلن حضوری در شیراز جداگانه محاسبه می‌شود."
+          description="همه پلن‌ها آنلاین و برای شاگردان داخل و خارج از کشور است؛ مربیگری حضوری در شیراز جداگانه هماهنگ می‌شود."
         />
 
         <div className="grid gap-6 md:grid-cols-3">

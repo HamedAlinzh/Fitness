@@ -1,17 +1,31 @@
 import type { Metadata } from "next";
-import { Phone, MapPin, Send } from "lucide-react";
+import { Phone, MapPin, Send, type LucideIcon } from "lucide-react";
 import PageHeader from "@/components/sections/PageHeader";
 import Container from "@/components/ui/Container";
-import ContactForm from "@/components/sections/ContactForm";
+import ConsultationForm from "@/components/sections/ConsultationForm";
 import FadeIn from "@/components/motion/FadeIn";
+import { COACH_PHONE, COACH_PHONE_DISPLAY } from "@/lib/site-contact";
+import { telUrl } from "@/lib/contact-links";
 
 export const metadata: Metadata = {
   title: "تماس با من | کوچ فیت",
   description: "درخواست مشاوره رایگان و شروع همکاری، حضوری یا آنلاین.",
 };
 
-const contactInfo = [
-  { icon: Phone, label: "تلفن تماس", value: "به‌زودی تکمیل می‌شود" },
+type ContactItem = {
+  icon: LucideIcon;
+  label: string;
+  value: string;
+  href?: string;
+};
+
+const contactInfo: ContactItem[] = [
+  {
+    icon: Phone,
+    label: "تلفن تماس",
+    value: COACH_PHONE_DISPLAY,
+    href: telUrl(COACH_PHONE),
+  },
   { icon: Send, label: "پیام مستقیم", value: "از طریق همین فرم" },
   { icon: MapPin, label: "موقعیت باشگاه", value: "شیراز" },
 ];
@@ -38,14 +52,31 @@ export default function ContactPage() {
                 </span>
                 <div>
                   <div className="text-xs text-ink-500">{item.label}</div>
-                  <div className="text-sm font-bold text-ink-900">{item.value}</div>
+                  {item.href ? (
+                    <a
+                      href={item.href}
+                      dir="ltr"
+                      className="block text-base font-extrabold text-red-600 transition-colors hover:text-red-700"
+                    >
+                      {item.value}
+                    </a>
+                  ) : (
+                    <div className="text-sm font-bold text-ink-900">
+                      {item.value}
+                    </div>
+                  )}
                 </div>
               </div>
             ))}
           </FadeIn>
 
-          <FadeIn delay={0.1}>
-            <ContactForm />
+          {/*
+            The form is the point of this page, so on phones it comes before the contact
+            cards — otherwise it starts below the fold and looks like the page is just
+            static info. On md+ the original two-column order is restored.
+          */}
+          <FadeIn delay={0.1} className="order-first md:order-none">
+            <ConsultationForm />
           </FadeIn>
         </Container>
       </section>

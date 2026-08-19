@@ -104,80 +104,81 @@ const testimonials = [
   { studentName: "شاگرد مربی", content: "تمرین حضوری در باشگاه با اصلاح مستقیم حرکات خیلی کمکم کرد.", approved: false },
 ];
 
-// Sample consultation requests so the panel has data to show. The public contact form
-// does not write to this table yet — that wiring is the next step.
+// Sample consultation requests so the panel has data to show; the real ones now come
+// from the public multi-step form at /contact.
 const leads = [
-  { name: "بازدیدکننده نمونه", phone: "09120000001", mode: "online", status: "NEW", message: "سلام، برای برنامه آنلاین چربی‌سوزی می‌خواستم راهنمایی بگیرم." },
-  { name: "بازدیدکننده نمونه", phone: "09120000002", mode: "in-person", status: "NEW", message: "امکان تمرین حضوری در شیراز رو دارم، هزینه‌ها چطوره؟" },
-  { name: "بازدیدکننده نمونه", phone: "09120000003", mode: "not-sure", status: "CONTACTED", message: "تازه می‌خوام شروع کنم و نمی‌دونم کدوم پلن مناسبمه." },
+  { name: "بازدیدکننده نمونه", phone: "09120000001", preferredChannel: "whatsapp", goal: "FAT_LOSS", level: "BEGINNER", mode: "online", daysPerWeek: 3, hasInjury: false, status: "NEW", message: "سلام، برای برنامه آنلاین چربی‌سوزی می‌خواستم راهنمایی بگیرم." },
+  { name: "بازدیدکننده نمونه", phone: "09120000002", preferredChannel: "telegram", telegramUsername: "sample_user", goal: "MUSCLE_GAIN", level: "INTERMEDIATE", mode: "in-person", daysPerWeek: 4, hasInjury: false, status: "NEW", message: "امکان تمرین حضوری در شیراز رو دارم، هزینه‌ها چطوره؟" },
+  { name: "بازدیدکننده نمونه", phone: "09120000003", preferredChannel: "call", goal: "GENERAL_FITNESS", level: "BEGINNER", mode: "not-sure", daysPerWeek: 2, hasInjury: true, injuryNote: "دیسک کمر خفیف دارم.", status: "CONTACTED", message: "تازه می‌خوام شروع کنم و نمی‌دونم کدوم پلن مناسبمه." },
 ];
 
+/**
+ * Every plan is online: coaching is sold to students inside and outside Iran, and
+ * in-person work in Shiraz is arranged by message rather than listed as a package (see
+ * the note rendered under the plans on /pricing).
+ *
+ * `priceToman` is whole toman. These are starting values only — the coach edits prices
+ * from /admin/packages, so re-running the seed will overwrite any edits made there.
+ */
 const packages = [
   {
-    title: "پلن پایه",
-    description: "شروع مربیگری آنلاین با برنامه تمرینی اختصاصی",
-    price: 990,
-    periodLabel: "ماهانه",
-    type: "ONLINE",
-    features: JSON.stringify(["برنامه تمرینی اختصاصی", "یک بار اصلاح برنامه", "پشتیبانی پیامی"]),
-    highlighted: false,
-  },
-  {
-    title: "پلن حرفه‌ای",
-    description: "برنامه کامل تمرین و تغذیه با پیگیری هفتگی",
-    price: 1990,
-    periodLabel: "ماهانه",
+    title: "نیمه‌خصوصی آنلاین — ۱۲ جلسه",
+    description:
+      "برنامه اختصاصی، فیلم حرکات و جلسات آنلاین در فضای تمرین خودت. مناسب شاگردان داخل و خارج از کشور.",
+    priceToman: 3_200_000,
+    periodLabel: "۱۲ جلسه",
     type: "ONLINE",
     features: JSON.stringify([
-      "برنامه تمرینی + تغذیه",
-      "پیگیری هفتگی پیشرفت",
-      "اصلاح نامحدود برنامه",
-      "پشتیبانی مستقیم",
+      "برنامه تمرینی کاملاً شخصی‌سازی‌شده",
+      "فیلم آموزشی تک‌تک حرکات",
+      "۲ تا ۳ جلسه آنلاین در فضای تمرین خودت",
+      "ارسال ویدیو برای بررسی و اصلاح فرم حرکت",
     ]),
     highlighted: true,
   },
   {
-    title: "پلن VIP",
-    description: "بالاترین سطح همراهی آنلاین",
-    price: 3490,
-    periodLabel: "ماهانه",
+    title: "نیمه‌خصوصی آنلاین — ۸ جلسه",
+    description:
+      "همان پلن نیمه‌خصوصی با تعداد جلسات کمتر، برای شروع کوتاه‌تر.",
+    priceToman: 2_900_000,
+    periodLabel: "۸ جلسه",
     type: "ONLINE",
     features: JSON.stringify([
-      "همه امکانات پلن حرفه‌ای",
-      "تماس تصویری هفتگی",
-      "برنامه اختصاصی مسابقات",
+      "برنامه تمرینی کاملاً شخصی‌سازی‌شده",
+      "فیلم آموزشی تک‌تک حرکات",
+      "۲ تا ۳ جلسه آنلاین در فضای تمرین خودت",
+      "ارسال ویدیو برای بررسی و اصلاح فرم حرکت",
     ]),
     highlighted: false,
   },
   {
-    title: "۸ جلسه حضوری",
-    description: "تمرین حضوری در باشگاه، شیراز",
-    price: 2490,
-    periodLabel: "ماهانه",
-    type: "IN_PERSON",
-    features: JSON.stringify(["۲ جلسه در هفته در باشگاه", "اصلاح مستقیم تکنیک", "برنامه تمرینی همراه"]),
-    highlighted: false,
-  },
-  {
-    title: "۱۲ جلسه حضوری",
-    description: "تمرین حضوری در باشگاه، شیراز",
-    price: 3490,
-    periodLabel: "ماهانه",
-    type: "IN_PERSON",
+    title: "پلن VIP آنلاین",
+    description:
+      "بالاترین سطح همراهی: هر ۱۲ جلسه به‌صورت زنده و تصویری کنار تو تمرین می‌کنیم.",
+    priceToman: 5_500_000,
+    periodLabel: "۱۲ جلسه",
+    type: "ONLINE",
     features: JSON.stringify([
-      "۳ جلسه در هفته در باشگاه",
-      "برنامه تمرینی + تغذیه",
-      "پیگیری مستمر پیشرفت",
+      "هر ۱۲ جلسه به‌صورت زنده و تصویری",
+      "برنامه تمرینی کاملاً شخصی‌سازی‌شده",
+      "فیلم آموزشی تک‌تک حرکات",
+      "ارسال ویدیو برای بررسی و اصلاح فرم حرکت",
     ]),
-    highlighted: true,
+    highlighted: false,
   },
   {
-    title: "خصوصی نامحدود",
-    description: "تمرین حضوری در باشگاه، شیراز",
-    price: 5990,
-    periodLabel: "ماهانه",
-    type: "IN_PERSON",
-    features: JSON.stringify(["جلسات نامحدود در باشگاه", "برنامه کاملاً اختصاصی", "پشتیبانی همیشگی"]),
+    title: "کلاس گروهی آنلاین",
+    description:
+      "گروه‌های ۲ تا ۴ نفره؛ مناسب تمرین با دوست، خواهر و برادر یا هم‌خانه.",
+    priceToman: 2_499_000,
+    periodLabel: "۱۲ جلسه",
+    type: "ONLINE",
+    features: JSON.stringify([
+      "گروه‌های کوچک ۲ تا ۴ نفره",
+      "۱۲ جلسه آنلاین و زنده",
+      "برنامه تمرینی متناسب با گروه",
+      "ارسال ویدیو برای بررسی و اصلاح فرم حرکت",
+    ]),
     highlighted: false,
   },
 ];

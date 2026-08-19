@@ -1,29 +1,34 @@
 import type { Metadata } from "next";
 import PageHeader from "@/components/sections/PageHeader";
-import PricingTabs from "@/components/sections/PricingTabs";
+import PricingPlans from "@/components/sections/PricingPlans";
 import PricingFaq from "@/components/sections/PricingFaq";
+import ContactBand from "@/components/sections/ContactBand";
 import CTA from "@/components/sections/CTA";
 import { prisma } from "@/lib/prisma";
 
 export const metadata: Metadata = {
   title: "پلن‌ها و قیمت‌گذاری | کوچ فیت",
-  description: "پلن‌های مربیگری آنلاین و حضوری در شیراز.",
+  description:
+    "پلن‌های مربیگری آنلاین برای شاگردان داخل و خارج از کشور؛ نیمه‌خصوصی، VIP و کلاس گروهی.",
 };
 
+// Prices are edited from /admin/packages, so a change has to show up without a rebuild.
+export const dynamic = "force-dynamic";
+
 export default async function PricingPage() {
-  const [onlinePlans, inPersonPlans] = await Promise.all([
-    prisma.package.findMany({ where: { type: "ONLINE" }, orderBy: { price: "asc" } }),
-    prisma.package.findMany({ where: { type: "IN_PERSON" }, orderBy: { price: "asc" } }),
-  ]);
+  const plans = await prisma.package.findMany({
+    orderBy: { priceToman: "asc" },
+  });
 
   return (
     <>
       <PageHeader
         eyebrow="پلن‌ها"
         title="پلنی که مناسب هدفته رو انتخاب کن"
-        description="چه آنلاین از هر جای ایران، چه حضوری در شیراز؛ هر پلن رو می‌تونیم متناسب با شرایطت تنظیم کنیم."
+        description="همه پلن‌ها آنلاین هستند و برای شاگردان داخل و خارج از کشور برگزار می‌شوند."
       />
-      <PricingTabs onlinePlans={onlinePlans} inPersonPlans={inPersonPlans} />
+      <PricingPlans plans={plans} />
+      <ContactBand />
       <PricingFaq />
       <CTA />
     </>

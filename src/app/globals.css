@@ -50,3 +50,49 @@ body {
   background: var(--background);
   color: var(--foreground);
 }
+
+/*
+  Consultation wizard — see src/components/sections/ConsultationForm.tsx.
+
+  Which step is showing is decided by a radio group plus sibling selectors, not by React
+  state: the nav controls are <label for> elements that flip the radio natively, so
+  "next" works from the first paint. It used to run through an onClick handler, which
+  meant the form was a dead end for however long hydration took — measured at ~10s on
+  throttled mobile data, with the button giving no feedback whatsoever when tapped.
+
+  Everything step-dependent carries data-wz-step="<index>" and is hidden by default; the
+  rule below reveals the elements belonging to the checked step. Anything that needs a
+  display other than `block` sets --wz-display itself (e.g. `[--wz-display:inline-flex]`).
+*/
+[data-wz-step] {
+  display: none;
+}
+
+#wz-0:checked ~ * [data-wz-step="0"],
+#wz-1:checked ~ * [data-wz-step="1"],
+#wz-2:checked ~ * [data-wz-step="2"],
+#wz-3:checked ~ * [data-wz-step="3"],
+#wz-4:checked ~ * [data-wz-step="4"],
+#wz-5:checked ~ * [data-wz-step="5"] {
+  display: var(--wz-display, block);
+}
+
+/* One element rather than six, so the bar animates between steps. */
+[data-wz-bar] {
+  width: 0;
+}
+#wz-0:checked ~ * [data-wz-bar] { width: 16.667%; }
+#wz-1:checked ~ * [data-wz-bar] { width: 33.333%; }
+#wz-2:checked ~ * [data-wz-bar] { width: 50%; }
+#wz-3:checked ~ * [data-wz-bar] { width: 66.667%; }
+#wz-4:checked ~ * [data-wz-bar] { width: 83.333%; }
+#wz-5:checked ~ * [data-wz-bar] { width: 100%; }
+
+/*
+  The optional injury note. Deliberately written as "hide it when 'no' is checked"
+  rather than "show it when 'yes' is checked": on a browser without :has() the whole
+  rule is dropped, so the note ends up always visible instead of unreachable.
+*/
+.wz-injury:has(#wz-injury-no:checked) [data-wz-injury-note] {
+  display: none;
+}

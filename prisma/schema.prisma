@@ -21,7 +21,6 @@ model User {
   createdAt    DateTime @default(now())
 
   assignments      ProgramAssignment[]
-  orders           Order[]
   sentMessages     Message[]           @relation("MessageSender")
   receivedMessages Message[]           @relation("MessageReceiver")
 }
@@ -100,11 +99,16 @@ model Testimonial {
 
 // type: "ONLINE" | "IN_PERSON"
 // features stored as a JSON-encoded string array (SQLite has no scalar lists)
+//
+// `priceToman` is in whole toman — the unit is in the name because the admin panel lets
+// the coach edit it directly, and a column that silently meant "thousands of toman"
+// turned every price edit into a factor-of-1000 guess. Convert to rial for an order
+// only via the helpers in src/lib/orders.ts.
 model Package {
   id           String   @id @default(cuid())
   title        String
   description  String
-  price        Int
+  priceToman   Int
   periodLabel  String
   features     String
   type         String   @default("ONLINE")
@@ -114,31 +118,69 @@ model Package {
   orders Order[]
 }
 
-// status: "PENDING" | "PAID" | "FAILED"
+// A payment link (an invoice) the coach issues by hand from the admin panel.
+//
+// Deliberately NOT tied to a User: buying a plan requires neither an account nor the
+// consultation form. The coach talks to the person first (usually on WhatsApp), then
+// issues a link; the `token` is the only thing authorising the checkout, which is why
+// it's random rather than a cuid, and why the link expires. Allowed values for the
+// enum-like String columns are the single source of truth in src/lib/orders.ts.
+//
+// status: "PENDING" | "PAID" | "CANCELED"
+//
+// `amountRial` is in RIAL, unlike `Package.price` which is in thousands of toman —
+// convert only via the helpers in src/lib/orders.ts.
+//
+// `customerPhone` is admin-only contact data; never select it into a public query.
+// The public /pay/[token] page is an exception and shows only what the payer typed.
 model Order {
-  id                String   @id @default(cuid())
-  userId            String
-  packageId         String
-  amount            Int
-  status            String   @default("PENDING")
-  zarinpalAuthority String?
-  zarinpalRefId     String?
-  createdAt         DateTime @default(now())
+  id            String    @id @default(cuid())
+  token         String    @unique
+  packageId     String
+  customerName  String
+  customerPhone String
+  amountRial    Int
+  status        String    @default("PENDING")
+  note          String?
+  expiresAt     DateTime?
+  paidAt        DateTime?
+  // Filled in by the payment gateway once one is connected. Named generically so
+  // swapping ZarinPal for another PSP doesn't need a migration.
+  gateway          String?
+  gatewayAuthority String?
+  gatewayRefId     String?
+  createdAt     DateTime  @default(now())
 
-  user    User    @relation(fields: [userId], references: [id])
   package Package @relation(fields: [packageId], references: [id])
 }
 
-// mode: "online" | "in-person" | "not-sure"
-// status: "NEW" | "CONTACTED" | "CLOSED"
+// Consultation request submitted from the public multi-step form
+// (src/lib/actions/submit-lead.ts). Allowed values for the enum-like String columns are
+// the single source of truth in src/lib/consultation.ts.
+//
+// goal:             "FAT_LOSS" | "MUSCLE_GAIN" | "GENERAL_FITNESS" | "COMPETITION"
+// level:            "BEGINNER" | "INTERMEDIATE" | "ADVANCED"
+// mode:             "online" | "in-person" | "not-sure"
+// preferredChannel: "whatsapp" | "telegram" | "call"
+// status:           "NEW" | "CONTACTED" | "CLOSED"
+//
+// `phone`, `telegramUsername` and `injuryNote` are admin-only. `injuryNote` is health
+// information — never select it into a public query.
 model Lead {
-  id        String   @id @default(cuid())
-  name      String
-  phone     String
-  message   String
-  mode      String   @default("online")
-  status    String   @default("NEW")
-  createdAt DateTime @default(now())
+  id               String   @id @default(cuid())
+  name             String
+  phone            String
+  telegramUsername String?
+  preferredChannel String   @default("whatsapp")
+  goal             String   @default("GENERAL_FITNESS")
+  level            String   @default("BEGINNER")
+  mode             String   @default("online")
+  daysPerWeek      Int      @default(3)
+  hasInjury        Boolean  @default(false)
+  injuryNote       String?
+  message          String?
+  status           String   @default("NEW")
+  createdAt        DateTime @default(now())
 }
 
 model Message {

@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
+import { normalizePhone } from "@/lib/phone";
 
 /**
  * DELIBERATELY UNAUTHENTICATED — this is the one Server Action in the project that the
@@ -17,23 +18,6 @@ const CONTENT_MAX = 1000;
 export type SubmitTestimonialState =
   | { error?: string; success?: string }
   | undefined;
-
-/** Persian/Arabic-Indic digits are converted so a Persian keyboard entry validates. */
-function toAsciiDigits(value: string): string {
-  return value
-    .replace(/[۰-۹]/g, (d) => String(d.charCodeAt(0) - 0x06f0))
-    .replace(/[٠-٩]/g, (d) => String(d.charCodeAt(0) - 0x0660));
-}
-
-function normalizePhone(raw: string): string | null {
-  const digits = toAsciiDigits(raw).replace(/[\s()-]/g, "");
-  const national = digits
-    .replace(/^\+98/, "0")
-    .replace(/^0098/, "0")
-    .replace(/^98(?=9\d{9}$)/, "0");
-
-  return /^09\d{9}$/.test(national) ? national : null;
-}
 
 export async function submitTestimonial(
   _prev: SubmitTestimonialState,
