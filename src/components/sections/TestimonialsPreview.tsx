@@ -10,6 +10,14 @@ export default async function TestimonialsPreview() {
     where: { approved: true },
     orderBy: { createdAt: "desc" },
     take: 3,
+    // Explicit select so the submitter's phone number can never reach a public page.
+    select: {
+      id: true,
+      studentName: true,
+      studentImage: true,
+      content: true,
+      rating: true,
+    },
   });
 
   if (testimonials.length === 0) return null;

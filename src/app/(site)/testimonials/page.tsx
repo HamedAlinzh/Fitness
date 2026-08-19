@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import PageHeader from "@/components/sections/PageHeader";
 import Container from "@/components/ui/Container";
 import TestimonialCard from "@/components/sections/TestimonialCard";
+import TestimonialForm from "@/components/sections/TestimonialForm";
+import SectionHeading from "@/components/ui/SectionHeading";
 import FadeIn from "@/components/motion/FadeIn";
 import CTA from "@/components/sections/CTA";
 import { prisma } from "@/lib/prisma";
@@ -15,6 +17,14 @@ export default async function TestimonialsPage() {
   const testimonials = await prisma.testimonial.findMany({
     where: { approved: true },
     orderBy: { createdAt: "desc" },
+    // Explicit select so the submitter's phone number can never reach a public page.
+    select: {
+      id: true,
+      studentName: true,
+      studentImage: true,
+      content: true,
+      rating: true,
+    },
   });
 
   return (
@@ -38,6 +48,16 @@ export default async function TestimonialsPage() {
               ))}
             </div>
           )}
+        </Container>
+      </section>
+
+      <section className="pb-16">
+        <Container className="flex max-w-2xl flex-col gap-8">
+          <SectionHeading
+            eyebrow="ثبت نظر"
+            title="تجربه‌ات رو با بقیه به اشتراک بذار"
+          />
+          <TestimonialForm />
         </Container>
       </section>
 

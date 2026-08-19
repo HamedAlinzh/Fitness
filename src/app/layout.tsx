@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
+import type { ReactNode } from "react";
 import { Vazirmatn } from "next/font/google";
 import "./globals.css";
-import Navbar from "@/components/shared/Navbar";
-import Footer from "@/components/shared/Footer";
 
 const vazirmatn = Vazirmatn({
   variable: "--font-vazirmatn",
@@ -15,18 +14,18 @@ export const metadata: Metadata = {
     "مربیگری حرفه‌ای بدنسازی و تناسب اندام، به صورت حضوری در شیراز و آنلاین در سراسر ایران.",
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+/**
+ * Root layout only owns the document shell. The public Navbar/Footer chrome lives in
+ * the `(site)` route group so the `/admin` panel can render its own chrome instead.
+ */
+export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html
       lang="fa"
       dir="rtl"
       className={`${vazirmatn.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">
-        <Navbar />
-        <main className="flex-1">{children}</main>
-        <Footer />
-      </body>
+      <body className="min-h-full flex flex-col">{children}</body>
     </html>
   );
 }

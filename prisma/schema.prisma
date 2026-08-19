@@ -83,12 +83,17 @@ model InstagramPost {
   createdAt DateTime @default(now())
 }
 
+// Submitted from the public site via src/lib/actions/submit-testimonial.ts with
+// approved = false, then flipped to true by an admin. `phone` is collected so the coach
+// can verify the submitter; it is admin-only and must never be selected into public
+// queries.
 model Testimonial {
   id           String   @id @default(cuid())
   studentName  String
   studentImage String?
   rating       Int      @default(5)
   content      String
+  phone        String?
   approved     Boolean  @default(true)
   createdAt    DateTime @default(now())
 }

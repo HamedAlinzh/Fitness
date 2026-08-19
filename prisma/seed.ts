@@ -1,5 +1,21 @@
+import { randomBytes, scrypt } from "node:crypto";
+import { promisify } from "node:util";
 import { PrismaClient } from "../src/generated/prisma/client";
 import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
+
+const scryptAsync = promisify(scrypt) as (
+  password: string,
+  salt: Buffer,
+  keylen: number
+) => Promise<Buffer>;
+
+// Mirrors src/lib/auth/password.ts. Duplicated rather than imported because the seed
+// runs under tsx outside the Next.js build, where the "server-only" import would fail.
+async function hashPassword(password: string) {
+  const salt = randomBytes(16);
+  const key = await scryptAsync(password, salt, 64);
+  return `scrypt$${salt.toString("hex")}$${key.toString("hex")}`;
+}
 
 const adapter = new PrismaBetterSqlite3({
   url: process.env.DATABASE_URL ?? "file:./dev.db",
@@ -78,13 +94,22 @@ const instagramPosts = [
   { shortcode: "DPPPS_mjT0l", type: "POST", thumbnail: "/instagram/DPPPS_mjT0l.jpg" },
 ];
 
+// The last two are left unapproved so the admin panel's approval queue is not empty.
 const testimonials = [
-  { studentName: "شاگرد مربی", content: "با برنامه اختصاصی و پیگیری روزانه، توی سه ماه به هدفم رسیدم." },
-  { studentName: "شاگرد مربی", content: "مربیگری آنلاین خیلی منظم و دقیق بود، انگار حضوری تمرین می‌کردم." },
-  { studentName: "شاگرد مربی", content: "برنامه تغذیه و تمرین با هم خیلی نتیجه بهتری داد." },
-  { studentName: "شاگرد مربی", content: "همیشه سریع جواب می‌ده و برنامه رو با شرایط من تنظیم می‌کنه." },
-  { studentName: "شاگرد مربی", content: "حس می‌کنم واقعاً کنارمه، نه فقط یک برنامه‌ی خشک و ثابت." },
-  { studentName: "شاگرد مربی", content: "تمرین حضوری در باشگاه با اصلاح مستقیم حرکات خیلی کمکم کرد." },
+  { studentName: "شاگرد مربی", content: "با برنامه اختصاصی و پیگیری روزانه، توی سه ماه به هدفم رسیدم.", approved: true },
+  { studentName: "شاگرد مربی", content: "مربیگری آنلاین خیلی منظم و دقیق بود، انگار حضوری تمرین می‌کردم.", approved: true },
+  { studentName: "شاگرد مربی", content: "برنامه تغذیه و تمرین با هم خیلی نتیجه بهتری داد.", approved: true },
+  { studentName: "شاگرد مربی", content: "همیشه سریع جواب می‌ده و برنامه رو با شرایط من تنظیم می‌کنه.", approved: true },
+  { studentName: "شاگرد مربی", content: "حس می‌کنم واقعاً کنارمه، نه فقط یک برنامه‌ی خشک و ثابت.", approved: false },
+  { studentName: "شاگرد مربی", content: "تمرین حضوری در باشگاه با اصلاح مستقیم حرکات خیلی کمکم کرد.", approved: false },
+];
+
+// Sample consultation requests so the panel has data to show. The public contact form
+// does not write to this table yet — that wiring is the next step.
+const leads = [
+  { name: "بازدیدکننده نمونه", phone: "09120000001", mode: "online", status: "NEW", message: "سلام، برای برنامه آنلاین چربی‌سوزی می‌خواستم راهنمایی بگیرم." },
+  { name: "بازدیدکننده نمونه", phone: "09120000002", mode: "in-person", status: "NEW", message: "امکان تمرین حضوری در شیراز رو دارم، هزینه‌ها چطوره؟" },
+  { name: "بازدیدکننده نمونه", phone: "09120000003", mode: "not-sure", status: "CONTACTED", message: "تازه می‌خوام شروع کنم و نمی‌دونم کدوم پلن مناسبمه." },
 ];
 
 const packages = [
@@ -157,7 +182,49 @@ const packages = [
   },
 ];
 
+/**
+ * Creates the admin account from ADMIN_EMAIL / ADMIN_PASSWORD. If no password is given a
+ * random one is generated and printed once — this avoids shipping a guessable default
+ * password, which would be a real hole given the panel is reachable at /admin/login.
+ * An existing admin's password is never overwritten by re-seeding.
+ */
+async function seedAdmin() {
+  const email = (process.env.ADMIN_EMAIL ?? "admin@example.com").toLowerCase();
+  const phone = process.env.ADMIN_PHONE ?? "09000000000";
+
+  const existing = await prisma.user.findUnique({ where: { email } });
+  if (existing) {
+    if (existing.role !== "ADMIN") {
+      await prisma.user.update({ where: { email }, data: { role: "ADMIN" } });
+    }
+    console.log(`Admin already exists: ${email} (password unchanged)`);
+    return;
+  }
+
+  const generated = !process.env.ADMIN_PASSWORD;
+  const password = process.env.ADMIN_PASSWORD ?? randomBytes(9).toString("base64url");
+
+  await prisma.user.create({
+    data: {
+      name: process.env.ADMIN_NAME ?? "مدیر سایت",
+      email,
+      phone,
+      role: "ADMIN",
+      passwordHash: await hashPassword(password),
+    },
+  });
+
+  console.log(`\nAdmin account created:\n  email:    ${email}`);
+  console.log(
+    generated
+      ? `  password: ${password}   <-- generated, shown only once\n`
+      : "  password: (from ADMIN_PASSWORD)\n"
+  );
+}
+
 async function main() {
+  await seedAdmin();
+
   await prisma.galleryItem.deleteMany();
   for (const item of galleryItems) {
     await prisma.galleryItem.create({ data: item });
@@ -188,6 +255,11 @@ async function main() {
   await prisma.package.deleteMany();
   for (const pkg of packages) {
     await prisma.package.create({ data: pkg });
+  }
+
+  await prisma.lead.deleteMany();
+  for (const lead of leads) {
+    await prisma.lead.create({ data: lead });
   }
 
   console.log("Seed completed.");

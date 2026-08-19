@@ -46,3 +46,7 @@ next-env.d.ts
 # sqlite
 *.db
 *.db-journal
+
+# uploaded media (runtime, not part of the repo)
+/public/uploads/*
+!/public/uploads/.gitkeep
