@@ -6,11 +6,11 @@ type Variant = "primary" | "secondary" | "ghost" | "light";
 
 const variantClasses: Record<Variant, string> = {
   primary:
-    "bg-pink-500 text-white shadow-lg shadow-pink-300/60 hover:bg-pink-600",
+    "bg-red-500 text-white shadow-lg shadow-red-300/60 hover:bg-red-600",
   secondary:
-    "border border-pink-200 text-pink-600 hover:bg-pink-50",
-  ghost: "text-pink-600 hover:bg-pink-50",
-  light: "bg-white text-pink-600 hover:bg-pink-50",
+    "border border-red-200 text-red-600 hover:bg-red-50",
+  ghost: "text-red-600 hover:bg-red-50",
+  light: "bg-white text-red-600 hover:bg-red-50",
 };
 
 const baseClasses =
@@ -18,6 +18,7 @@ const baseClasses =
 
 export default function Button({
   href,
+  external = false,
   variant = "primary",
   className,
   children,
@@ -25,6 +26,8 @@ export default function Button({
   type = "button",
 }: {
   href?: string;
+  /** Render a plain anchor that opens in a new tab, for off-site links. */
+  external?: boolean;
   variant?: Variant;
   className?: string;
   children: ReactNode;
@@ -32,6 +35,19 @@ export default function Button({
   type?: "button" | "submit";
 }) {
   const classes = cn(baseClasses, variantClasses[variant], className);
+
+  if (href && external) {
+    return (
+      <a
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={classes}
+      >
+        {children}
+      </a>
+    );
+  }
 
   if (href) {
     return (

@@ -66,6 +66,18 @@ const blogPosts = [
   },
 ];
 
+// Ordered newest-first; `sortOrder` is assigned from the array index below.
+// Instagram serves no public metadata to unauthenticated clients (every post URL hits a
+// login wall), so cover images are saved by hand into public/instagram/<shortcode>.jpg.
+const instagramPosts = [
+  { shortcode: "DXtb2bZDdcO", type: "REEL", thumbnail: "/instagram/DXtb2bZDdcO.jpg" },
+  { shortcode: "DS0aVP-DVWo", type: "REEL", thumbnail: "/instagram/DS0aVP-DVWo.jpg" },
+  { shortcode: "DP68wlaDZEj", type: "POST", thumbnail: "/instagram/DP68wlaDZEj.jpg" },
+  { shortcode: "DPcARlRiWkp", type: "REEL", thumbnail: "/instagram/DPcARlRiWkp.jpg" },
+  { shortcode: "DPWynxdDVu9", type: "REEL", thumbnail: "/instagram/DPWynxdDVu9.jpg" },
+  { shortcode: "DPPPS_mjT0l", type: "POST", thumbnail: "/instagram/DPPPS_mjT0l.jpg" },
+];
+
 const testimonials = [
   { studentName: "شاگرد مربی", content: "با برنامه اختصاصی و پیگیری روزانه، توی سه ماه به هدفم رسیدم." },
   { studentName: "شاگرد مربی", content: "مربیگری آنلاین خیلی منظم و دقیق بود، انگار حضوری تمرین می‌کردم." },
@@ -156,6 +168,15 @@ async function main() {
       where: { slug: post.slug },
       update: post,
       create: { ...post, publishedAt: new Date() },
+    });
+  }
+
+  // Upsert rather than delete+recreate so re-seeding keeps existing row ids stable.
+  for (const [index, post] of instagramPosts.entries()) {
+    await prisma.instagramPost.upsert({
+      where: { shortcode: post.shortcode },
+      update: { ...post, sortOrder: index },
+      create: { ...post, sortOrder: index },
     });
   }
 

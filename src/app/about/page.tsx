@@ -70,7 +70,7 @@ export default function AboutPage() {
         </Container>
       </section>
 
-      <section className="bg-pink-50/60 py-20">
+      <section className="bg-red-50/60 py-20">
         <Container className="flex flex-col gap-12">
           <div className="text-center">
             <h2 className="text-2xl font-extrabold text-ink-900 sm:text-3xl">
@@ -81,8 +81,8 @@ export default function AboutPage() {
           <div className="grid gap-6 sm:grid-cols-2">
             {reasons.map((reason, index) => (
               <FadeIn key={reason.title} delay={index * 0.1}>
-                <div className="flex items-start gap-4 rounded-3xl border border-pink-100 bg-white p-6 text-right">
-                  <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-pink-100 text-pink-600">
+                <div className="flex items-start gap-4 rounded-3xl border border-red-100 bg-white p-6 text-right">
+                  <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-red-100 text-red-600">
                     <reason.icon className="h-6 w-6" strokeWidth={1.75} />
                   </span>
                   <div>

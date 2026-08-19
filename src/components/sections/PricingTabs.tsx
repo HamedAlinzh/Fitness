@@ -33,8 +33,8 @@ export default function PricingTabs({
               className={cn(
                 "rounded-full px-6 py-2.5 text-sm font-bold transition-colors",
                 active === tab.key
-                  ? "bg-pink-500 text-white"
-                  : "bg-pink-50 text-pink-600 hover:bg-pink-100"
+                  ? "bg-red-500 text-white"
+                  : "bg-red-50 text-red-600 hover:bg-red-100"
               )}
             >
               {tab.label}

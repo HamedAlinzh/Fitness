@@ -3,10 +3,10 @@ import type { LucideIcon } from "lucide-react";
 import { cn } from "@/lib/cn";
 
 const gradients = [
-  "from-pink-300 to-pink-500",
-  "from-pink-400 to-pink-600",
-  "from-pink-200 to-pink-400",
-  "from-pink-500 to-pink-700",
+  "from-red-300 to-red-500",
+  "from-red-400 to-red-600",
+  "from-red-200 to-red-400",
+  "from-red-500 to-red-700",
 ];
 
 export default function PlaceholderMedia({

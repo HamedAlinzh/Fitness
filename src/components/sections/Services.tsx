@@ -29,7 +29,7 @@ const services = [
 
 export default function Services() {
   return (
-    <section className="bg-pink-50/60 py-20">
+    <section className="bg-red-50/60 py-20">
       <Container className="flex flex-col gap-12">
         <SectionHeading
           eyebrow="خدمات"
@@ -41,7 +41,7 @@ export default function Services() {
           {services.map((service, index) => (
             <FadeIn key={service.title} delay={index * 0.1}>
               <Card className="flex h-full flex-col items-start gap-4 text-right">
-                <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-pink-100 text-pink-600">
+                <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-red-100 text-red-600">
                   <service.icon className="h-6 w-6" strokeWidth={1.75} />
                 </span>
                 <h3 className="text-lg font-bold text-ink-900">{service.title}</h3>

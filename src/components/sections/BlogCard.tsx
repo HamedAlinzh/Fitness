@@ -31,7 +31,7 @@ export default function BlogCard({
   return (
     <Link
       href={`/blog/${post.slug}`}
-      className="flex h-full flex-col overflow-hidden rounded-3xl border border-pink-100 bg-white text-right shadow-sm shadow-pink-100/50 transition-shadow hover:shadow-lg hover:shadow-pink-200/50"
+      className="flex h-full flex-col overflow-hidden rounded-3xl border border-red-100 bg-white text-right shadow-sm shadow-red-100/50 transition-shadow hover:shadow-lg hover:shadow-red-200/50"
     >
       <PlaceholderMedia
         icon={icons[variant % icons.length]}

@@ -14,8 +14,8 @@ export default function ContactForm() {
 
   if (submitted) {
     return (
-      <div className="flex flex-col items-center gap-3 rounded-3xl border border-pink-100 bg-white p-10 text-center">
-        <CheckCircle2 className="h-10 w-10 text-pink-500" />
+      <div className="flex flex-col items-center gap-3 rounded-3xl border border-red-100 bg-white p-10 text-center">
+        <CheckCircle2 className="h-10 w-10 text-red-500" />
         <h3 className="text-lg font-bold text-ink-900">پیامت ثبت شد!</h3>
         <p className="text-sm leading-7 text-ink-500">
           به‌زودی باهات تماس می‌گیرم. ممنون از اعتمادت.
@@ -27,7 +27,7 @@ export default function ContactForm() {
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex flex-col gap-4 rounded-3xl border border-pink-100 bg-white p-6 text-right sm:p-8"
+      className="flex flex-col gap-4 rounded-3xl border border-red-100 bg-white p-6 text-right sm:p-8"
     >
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="flex flex-col gap-1.5">
@@ -39,7 +39,7 @@ export default function ContactForm() {
             name="name"
             type="text"
             required
-            className="rounded-xl border border-pink-100 px-4 py-2.5 text-sm outline-none focus:border-pink-400"
+            className="rounded-xl border border-red-100 px-4 py-2.5 text-sm outline-none focus:border-red-400"
           />
         </div>
 
@@ -52,7 +52,7 @@ export default function ContactForm() {
             name="phone"
             type="tel"
             required
-            className="rounded-xl border border-pink-100 px-4 py-2.5 text-sm outline-none focus:border-pink-400"
+            className="rounded-xl border border-red-100 px-4 py-2.5 text-sm outline-none focus:border-red-400"
           />
         </div>
       </div>
@@ -64,7 +64,7 @@ export default function ContactForm() {
         <select
           id="mode"
           name="mode"
-          className="rounded-xl border border-pink-100 px-4 py-2.5 text-sm outline-none focus:border-pink-400"
+          className="rounded-xl border border-red-100 px-4 py-2.5 text-sm outline-none focus:border-red-400"
         >
           <option value="online">آنلاین</option>
           <option value="in-person">حضوری در شیراز</option>
@@ -81,7 +81,7 @@ export default function ContactForm() {
           name="message"
           rows={4}
           required
-          className="rounded-xl border border-pink-100 px-4 py-2.5 text-sm outline-none focus:border-pink-400"
+          className="rounded-xl border border-red-100 px-4 py-2.5 text-sm outline-none focus:border-red-400"
         />
       </div>
 

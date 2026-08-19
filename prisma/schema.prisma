@@ -72,6 +72,17 @@ model BlogPost {
   createdAt   DateTime  @default(now())
 }
 
+// type: "REEL" | "POST" — mirrors the /reel/ vs /p/ segment of the Instagram permalink
+// The permalink is derived from `shortcode` + `type` in src/lib/instagram.ts rather than stored.
+model InstagramPost {
+  id        String   @id @default(cuid())
+  shortcode String   @unique
+  type      String   @default("REEL")
+  thumbnail String?
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+}
+
 model Testimonial {
   id           String   @id @default(cuid())
   studentName  String

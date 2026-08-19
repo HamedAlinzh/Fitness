@@ -12,19 +12,19 @@ export default function PageHeader({
   description?: string;
 }) {
   return (
-    <section className="relative overflow-hidden border-b border-pink-100 bg-pink-50/60">
-      <div className="absolute -top-20 -left-20 h-64 w-64 rounded-full bg-pink-200/50 blur-3xl" />
+    <section className="relative overflow-hidden border-b border-red-100 bg-red-50/60">
+      <div className="absolute -top-20 -left-20 h-64 w-64 rounded-full bg-red-200/50 blur-3xl" />
       <Container className="relative flex flex-col items-center gap-4 py-16 text-center">
-        <FadeIn>
+        <FadeIn mode="mount">
           <Badge>{eyebrow}</Badge>
         </FadeIn>
-        <FadeIn delay={0.1}>
+        <FadeIn mode="mount" delay={0.06}>
           <h1 className="max-w-2xl text-3xl font-extrabold text-ink-900 sm:text-4xl">
             {title}
           </h1>
         </FadeIn>
         {description && (
-          <FadeIn delay={0.2}>
+          <FadeIn mode="mount" delay={0.12}>
             <p className="max-w-xl text-sm leading-8 text-ink-500 sm:text-base">
               {description}
             </p>

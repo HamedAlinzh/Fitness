@@ -31,9 +31,9 @@ export default function ContactPage() {
             {contactInfo.map((item) => (
               <div
                 key={item.label}
-                className="flex items-center gap-4 rounded-3xl border border-pink-100 bg-white p-5 text-right"
+                className="flex items-center gap-4 rounded-3xl border border-red-100 bg-white p-5 text-right"
               >
-                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-pink-100 text-pink-600">
+                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-red-100 text-red-600">
                   <item.icon className="h-5 w-5" strokeWidth={1.75} />
                 </span>
                 <div>

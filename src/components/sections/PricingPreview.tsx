@@ -15,7 +15,7 @@ export default async function PricingPreview() {
   if (plans.length === 0) return null;
 
   return (
-    <section className="bg-pink-50/60 py-20">
+    <section className="bg-red-50/60 py-20">
       <Container className="flex flex-col gap-12">
         <SectionHeading
           eyebrow="پلن‌ها و قیمت‌گذاری"

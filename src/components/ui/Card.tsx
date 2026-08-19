@@ -11,7 +11,7 @@ export default function Card({
   return (
     <div
       className={cn(
-        "rounded-3xl border border-pink-100 bg-white p-6 shadow-sm shadow-pink-100/50 transition-shadow hover:shadow-lg hover:shadow-pink-200/50",
+        "rounded-3xl border border-red-100 bg-white p-6 shadow-sm shadow-red-100/50 transition-shadow hover:shadow-lg hover:shadow-red-200/50",
         className
       )}
     >

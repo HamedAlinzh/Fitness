@@ -17,7 +17,7 @@ export default function AboutPreview() {
         </FadeIn>
 
         <FadeIn delay={0.15} className="flex flex-col items-start gap-4 text-right">
-          <span className="text-sm font-bold text-pink-600">درباره من</span>
+          <span className="text-sm font-bold text-red-600">درباره من</span>
           <h2 className="text-3xl font-extrabold text-ink-900 sm:text-4xl">
             مربی‌ای که کنارت می‌مونه، نه فقط یک برنامه تمرینی می‌ده
           </h2>

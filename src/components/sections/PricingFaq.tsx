@@ -20,14 +20,14 @@ const faqs = [
 
 export default function PricingFaq() {
   return (
-    <section className="bg-pink-50/60 py-20">
+    <section className="bg-red-50/60 py-20">
       <Container className="flex flex-col gap-10">
         <SectionHeading eyebrow="سوالات متداول" title="قبل از انتخاب پلن بخون" />
 
         <div className="mx-auto flex w-full max-w-2xl flex-col gap-4">
           {faqs.map((faq, index) => (
             <FadeIn key={faq.question} delay={index * 0.1}>
-              <div className="rounded-2xl border border-pink-100 bg-white p-6 text-right">
+              <div className="rounded-2xl border border-red-100 bg-white p-6 text-right">
                 <h3 className="text-sm font-bold text-ink-900">{faq.question}</h3>
                 <p className="mt-2 text-sm leading-7 text-ink-500">{faq.answer}</p>
               </div>
