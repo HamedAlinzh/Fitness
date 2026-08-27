@@ -55,8 +55,14 @@ model GalleryItem {
   type      String   @default("IMAGE")
   url       String?
   caption   String
+  // SHA-256 of the uploaded bytes, used to recognise the *same* photo being sent twice
+  // (a refresh, a second tap on a slow connection) instead of storing it again. Null for
+  // the seeded rows, which have no file at all.
+  fileHash  String?
   takenAt   DateTime @default(now())
   createdAt DateTime @default(now())
+
+  @@index([fileHash])
 }
 
 model BlogPost {

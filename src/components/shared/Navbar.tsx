@@ -1,8 +1,14 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useRef } from "react";
-import { SITE_LOGO_MARK, SITE_NAME } from "@/lib/brand";
+import {
+  SITE_LOGO_HEIGHT,
+  SITE_LOGO_SRC,
+  SITE_LOGO_WIDTH,
+  SITE_NAME,
+} from "@/lib/brand";
 
 const navLinks = [
   { href: "/", label: "خانه" },
@@ -32,9 +38,20 @@ export default function Navbar() {
     <header className="sticky top-0 z-50 border-b border-red-100 bg-white">
       <nav className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 sm:px-6">
         <Link href="/" className="flex items-center gap-2 text-lg font-extrabold text-red-600">
-          <span className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-red-400 to-red-600 text-white">
-            {SITE_LOGO_MARK}
-          </span>
+          {/* Decorative: the brand name follows as text in the same link, so an alt
+              text here would only make a screen reader announce it twice. */}
+          <Image
+            src={SITE_LOGO_SRC}
+            alt=""
+            width={SITE_LOGO_WIDTH}
+            height={SITE_LOGO_HEIGHT}
+            // The artwork is ~870px wide but is painted at ~60px here; without `sizes`
+            // next/image would size the srcset from the intrinsic width and ship a 1080px
+            // copy into the header of every page.
+            sizes="60px"
+            priority
+            className="h-9 w-auto"
+          />
           {/* A Latin name inside an RTL line: dir="ltr" keeps the words in order. */}
           <span dir="ltr">{SITE_NAME}</span>
         </Link>

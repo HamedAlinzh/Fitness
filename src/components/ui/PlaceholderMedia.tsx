@@ -15,17 +15,33 @@ export default function PlaceholderMedia({
   src,
   alt = "",
   className,
+  fit = "cover",
+  sizes = "400px",
 }: {
   icon: LucideIcon;
   variant?: number;
   src?: string | null;
   alt?: string;
   className?: string;
+  /**
+   * `contain` shows the whole picture inside the box instead of filling it, for places
+   * where cropping loses the subject — the gallery, where the coach's photos are a mix of
+   * portrait and landscape. Cover stays the default so the cards that were designed
+   * around a filled tile (blog covers, the about photo) are unchanged.
+   */
+  fit?: "cover" | "contain";
+  sizes?: string;
 }) {
   if (src) {
     return (
       <div className={cn("relative overflow-hidden", className)}>
-        <Image src={src} alt={alt} fill sizes="400px" className="object-cover" />
+        <Image
+          src={src}
+          alt={alt}
+          fill
+          sizes={sizes}
+          className={fit === "contain" ? "object-contain" : "object-cover"}
+        />
       </div>
     );
   }

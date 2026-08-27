@@ -37,7 +37,7 @@ const steps = [
   { name: "mode", question: "کدوم نوع مربیگری رو می‌خوای؟", choices: MODES },
   {
     name: "daysPerWeek",
-    question: "هفته‌ای چند روز می‌تونی تمرین کنی؟",
+    question: "چند روز در هفته می‌تونی تمرین کنی؟",
     choices: DAYS_PER_WEEK,
   },
 ] as const;

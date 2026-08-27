@@ -1,6 +1,8 @@
-import { stat, readFile } from "node:fs/promises";
+import { createReadStream } from "node:fs";
+import { stat } from "node:fs/promises";
+import { Readable } from "node:stream";
 import path from "node:path";
-import { UPLOAD_DIR, contentTypeFor } from "@/lib/uploads";
+import { UPLOAD_DIR, UPLOAD_EXTENSIONS, contentTypeFor } from "@/lib/uploads";
 
 /**
  * Serves the files written by `saveUpload` into `public/uploads/`.
@@ -17,12 +19,39 @@ import { UPLOAD_DIR, contentTypeFor } from "@/lib/uploads";
  * that `public/` cannot serve.
  */
 
-// Uploaded filenames are a UUID plus one of three known extensions. Anything else is not
-// something this app ever wrote, so it is refused before it can reach the filesystem.
-const FILENAME_PATTERN = /^[0-9a-f-]{36}\.(jpg|png|webp)$/;
+// Uploaded filenames are a UUID plus one of the extensions this app writes. Anything else
+// is not something it ever produced, so it is refused before it can reach the filesystem.
+const FILENAME_PATTERN = new RegExp(
+  `^[0-9a-f-]{36}\\.(${UPLOAD_EXTENSIONS.join("|")})$`
+);
+
+const CACHE_CONTROL = "public, max-age=31536000, immutable";
+
+/**
+ * Parses a single-range `Range: bytes=…` header. Multi-range requests are ignored (the
+ * caller then gets the whole file, which is a legal response to any range request).
+ */
+function parseRange(header: string | null, size: number) {
+  if (!header) return null;
+
+  const match = /^bytes=(\d*)-(\d*)$/.exec(header.trim());
+  if (!match) return null;
+
+  const [, rawStart, rawEnd] = match;
+  if (rawStart === "" && rawEnd === "") return null;
+
+  // "bytes=-500" means the last 500 bytes.
+  const start = rawStart === "" ? Math.max(0, size - Number(rawEnd)) : Number(rawStart);
+  const end = rawStart === "" || rawEnd === "" ? size - 1 : Number(rawEnd);
+
+  if (!Number.isFinite(start) || !Number.isFinite(end)) return null;
+  if (start > end || start >= size) return { unsatisfiable: true as const };
+
+  return { start, end: Math.min(end, size - 1) };
+}
 
 export async function GET(
-  _request: Request,
+  request: Request,
   { params }: { params: Promise<{ file: string }> }
 ) {
   const { file } = await params;
@@ -47,15 +76,40 @@ export async function GET(
     return new Response("Not found", { status: 404 });
   }
 
-  const body = await readFile(target);
+  const contentType = contentTypeFor(file);
+  const range = parseRange(request.headers.get("range"), size);
 
-  return new Response(new Uint8Array(body), {
+  if (range && "unsatisfiable" in range) {
+    return new Response(null, {
+      status: 416,
+      headers: { "Content-Range": `bytes */${size}`, "Accept-Ranges": "bytes" },
+    });
+  }
+
+  /**
+   * Range support is what makes uploaded video playable at all: iOS Safari will not start
+   * a `<video>` whose server answers the initial range request with a plain 200, and
+   * seeking anywhere in a clip depends on it everywhere else. It also means a 40MB video
+   * is streamed in pieces instead of being read into memory in full, which the previous
+   * `readFile` did for every request.
+   */
+  const start = range ? range.start : 0;
+  const end = range ? range.end : size - 1;
+
+  const stream = Readable.toWeb(
+    createReadStream(target, { start, end })
+  ) as ReadableStream<Uint8Array>;
+
+  return new Response(stream, {
+    status: range ? 206 : 200,
     headers: {
-      "Content-Type": contentTypeFor(file),
-      "Content-Length": String(size),
+      "Content-Type": contentType,
+      "Content-Length": String(end - start + 1),
+      "Accept-Ranges": "bytes",
+      ...(range ? { "Content-Range": `bytes ${start}-${end}/${size}` } : {}),
       // Filenames are random UUIDs and a replacement always gets a new one, so a stored
       // copy can never be stale.
-      "Cache-Control": "public, max-age=31536000, immutable",
+      "Cache-Control": CACHE_CONTROL,
     },
   });
 }

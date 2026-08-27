@@ -33,7 +33,7 @@ export default async function AboutPreview() {
           </h2>
           <p className="leading-8 text-ink-500">{about.previewText}</p>
           <Button href="/about" variant="ghost">
-            بیشتر درباره من بدان ←
+            بیشتر ←
           </Button>
         </FadeIn>
       </Container>

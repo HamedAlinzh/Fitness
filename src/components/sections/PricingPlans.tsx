@@ -40,8 +40,8 @@ export default function PricingPlans({ plans }: { plans: PackageData[] }) {
 
         <p className="mx-auto flex max-w-2xl flex-wrap items-center justify-center gap-x-2 gap-y-1 rounded-2xl bg-red-50/60 px-6 py-4 text-center text-sm leading-7 text-ink-700">
           <MapPin className="h-4 w-4 shrink-0 text-red-500" />
-          برای مربیگری <span className="font-bold">حضوری در شیراز</span> پلن ثابتی
-          تعریف نشده —{" "}
+          برای مربیگری <span className="font-bold">حضوری در شیراز</span> 
+           —{" "}
           <a
             href={whatsappUrl(COACH_PHONE, inPersonMessage)}
             target="_blank"

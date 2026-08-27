@@ -17,23 +17,35 @@ export const metadata: Metadata = {
 const reasons = [
   {
     icon: GraduationCap,
-    title: "دانش تمرینی و تغذیه‌ای",
-    description: "دوره‌های تخصصی تمرین قدرتی و تغذیه ورزشی رو گذروندم و همیشه به‌روز می‌مونم.",
+    title: "دانش تخصصی تمرین و تغذیه",
+    points: [
+      "گذراندن دوره‌های تخصصی تمرین قدرتی و تغذیه ورزشی",
+      "به‌روزرسانی مستمر دانش بر اساس منابع علمی روز",
+    ],
   },
   {
     icon: Users2,
-    title: "برنامه کاملاً شخصی‌سازی‌شده",
-    description: "برای هر شاگرد بر اساس هدف، سطح و شرایط زندگیش برنامه می‌نویسم، نه یک نسخه‌ی ثابت.",
+    title: "برنامه‌ی کاملاً اختصاصی",
+    points: [
+      "طراحی برنامه بر پایه‌ی هدف، سطح آمادگی و شرایط زندگی هر فرد",
+      "پرهیز از نسخه‌های آماده و یکسان برای همه",
+    ],
   },
   {
     icon: MapPinned,
-    title: "حضوری در شیراز، آنلاین همه‌جا",
-    description: "چه بخوای حضوری تمرین کنی چه از هر شهری آنلاین همراهت باشم، امکانش هست.",
+    title: "حضوری در شیراز، آنلاین در همه‌جا",
+    points: [
+      "امکان تمرین حضوری برای ساکنان شیراز",
+      "همراهی آنلاین برای شاگردان سایر شهرها و کشورها",
+    ],
   },
   {
     icon: MessageSquareHeart,
-    title: "پیگیری مداوم",
-    description: "کنارت می‌مونم، برنامه رو با پیشرفتت تنظیم می‌کنم و همیشه در دسترسم.",
+    title: "پیگیری و پشتیبانی مستمر",
+    points: [
+      "بازبینی و اصلاح برنامه متناسب با روند پیشرفت",
+      "پاسخ‌گویی و در دسترس بودن در طول دوره",
+    ],
   },
 ];
 
@@ -72,7 +84,7 @@ export default async function AboutPage() {
         <Container className="flex flex-col gap-12">
           <div className="text-center">
             <h2 className="text-2xl font-extrabold text-ink-900 sm:text-3xl">
-              چرا با من تمرین کنی؟
+              چرا با من تمرین کنید؟
             </h2>
           </div>
 
@@ -85,9 +97,11 @@ export default async function AboutPage() {
                   </span>
                   <div>
                     <h3 className="font-bold text-ink-900">{reason.title}</h3>
-                    <p className="mt-1 text-sm leading-7 text-ink-500">
-                      {reason.description}
-                    </p>
+                    <ul className="mt-2 list-disc space-y-1 ps-5 text-sm leading-7 text-ink-500 marker:text-red-400">
+                      {reason.points.map((point) => (
+                        <li key={point}>{point}</li>
+                      ))}
+                    </ul>
                   </div>
                 </div>
               </FadeIn>

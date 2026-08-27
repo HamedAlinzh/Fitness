@@ -9,7 +9,7 @@
   --color-red-200: #ffbdb8;
   --color-red-300: #f7938c;
   --color-red-400: #e6605a;
-  --color-red-500: #c62828;
+  --color-red-500: #DA0037;
   --color-red-600: #a51d20;
   --color-red-700: #85161a;
   --color-red-800: #661215;
@@ -95,4 +95,21 @@ body {
 */
 .wz-injury:has(#wz-injury-no:checked) [data-wz-injury-note] {
   display: none;
+}
+
+/* ---------------------------------------------------------------------------
+  Gallery lightbox — see src/components/sections/GalleryLightbox.tsx.
+
+  Opening a photo is a link to `#media-<id>`, and the panel with that id is what
+  `:target` matches. Keeping the rule here rather than on the element avoids pairing
+  Tailwind's `hidden` with a second display utility, where which one wins depends on the
+  emitted CSS order rather than on the class list.
+--------------------------------------------------------------------------- */
+[data-lightbox] {
+  display: none;
+}
+
+[data-lightbox]:target {
+  display: flex;
+  overscroll-behavior: contain;
 }

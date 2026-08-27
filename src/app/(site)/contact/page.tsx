@@ -37,7 +37,7 @@ export default function ContactPage() {
       <PageHeader
         eyebrow="تماس با من"
         title="آماده‌ای مسیر جدیدت رو شروع کنی؟"
-        description="فرم زیر رو پر کن تا هدفت رو بشنوم و بهترین برنامه رو باهم بچینیم."
+        description="فرم زیر رو پر کن تا هدفت رو ببینم و بهترین برنامه رو باهم بچینیم."
       />
 
       <section className="py-16">

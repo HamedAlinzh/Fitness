@@ -12,11 +12,11 @@ export const GOALS: Choice[] = [
   { value: "FAT_LOSS", label: "چربی‌سوزی و کاهش وزن" },
   { value: "MUSCLE_GAIN", label: "عضله‌سازی" },
   { value: "GENERAL_FITNESS", label: "تناسب و سلامت عمومی" },
-  { value: "COMPETITION", label: "آمادگی مسابقه" },
+  { value: "COMPETITION", label: "تمرین برای رشته تخصصی" },
 ];
 
 export const LEVELS: Choice[] = [
-  { value: "BEGINNER", label: "تازه‌کار" },
+  { value: "BEGINNER", label: "مبتدی" },
   { value: "INTERMEDIATE", label: "نیمه‌حرفه‌ای" },
   { value: "ADVANCED", label: "حرفه‌ای" },
 ];

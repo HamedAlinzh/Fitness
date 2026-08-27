@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { MessageSquareQuote, Images, Inbox, BarChart3, Clock } from "lucide-react";
+import { MessageSquareQuote, Images, Inbox, BarChart3 } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/auth/dal";
 import { getAnalyticsSummary } from "@/lib/analytics";
@@ -77,12 +77,6 @@ export default async function AdminDashboardPage() {
           </Link>
         ))}
       </div>
-
-      <p className="flex items-start gap-2 rounded-2xl border border-red-100 bg-white p-4 text-sm leading-6 text-ink-500">
-        <Clock className="mt-0.5 h-4 w-4 shrink-0 text-red-500" />
-        فرم مشاوره‌ی سایت هنوز به این پنل وصل نشده و درخواست‌ها ذخیره نمی‌شوند؛ این اتصال
-        در مرحله‌ی بعد انجام می‌شود.
-      </p>
     </div>
   );
 }

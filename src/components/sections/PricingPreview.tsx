@@ -19,7 +19,7 @@ export default async function PricingPreview() {
         <SectionHeading
           eyebrow="پلن‌ها و قیمت‌گذاری"
           title="پلنی که مناسب خودته رو انتخاب کن"
-          description="همه پلن‌ها آنلاین و برای شاگردان داخل و خارج از کشور است؛ مربیگری حضوری در شیراز جداگانه هماهنگ می‌شود."
+          description="همه پلن‌ها آنلاین و برای شاگردان داخل و خارج از کشور است؛ اگر مقیم ایران نیستید با من در ارتباط باشید."
         />
 
         <div className="grid gap-6 md:grid-cols-3">

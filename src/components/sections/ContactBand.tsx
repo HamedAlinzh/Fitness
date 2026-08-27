@@ -14,7 +14,7 @@ import { telUrl, whatsappUrl } from "@/lib/contact-links";
  * being routed through `next/link`, and so the whole band works with no JS at all.
  */
 export default function ContactBand({
-  title = "برای شروع فقط کافیست تماس بگیری",
+  title = "برای شروع فقط کافیه تماس بگیری",
   description = "لازم نیست فرمی پر کنی. زنگ بزن یا پیام بده، پلن مناسبت را باهم انتخاب می‌کنیم و بعد لینک پرداخت برایت می‌فرستم.",
 }: {
   title?: string;

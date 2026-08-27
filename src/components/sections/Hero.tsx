@@ -20,7 +20,7 @@ export default function Hero() {
         </FadeIn>
         <FadeIn mode="mount" delay={0.12}>
           <p className="max-w-xl text-base leading-8 text-ink-500">
-            مربیگری حرفه‌ای، حضوری در شیراز و آنلاین برای سراسر ایران؛ برنامه
+            مربیگری حرفه‌ای، حضوری در شیراز و آنلاین برای سراسر دنیا؛ برنامه
             تمرینی اختصاصی، پیگیری روزانه و مشاوره مستقیم.
           </p>
         </FadeIn>
