@@ -194,3 +194,46 @@ model Message {
   sender   User @relation("MessageSender", fields: [senderId], references: [id])
   receiver User @relation("MessageReceiver", fields: [receiverId], references: [id])
 }
+
+// Single-row table (id is always ABOUT_CONTENT_ID) holding the editable copy and photo
+// of the "درباره من" section, so the coach can rewrite it from /admin/about without a
+// deploy. Defaults live in src/lib/about.ts and are used whenever the row is missing,
+// so a fresh database still renders a complete page.
+//
+// `bodyText` holds the /about page's paragraphs separated by blank lines — SQLite has no
+// scalar lists, and a textarea is the natural editor for prose anyway.
+model AboutContent {
+  id          String   @id @default("about")
+  eyebrow     String
+  heading     String
+  previewText String
+  bodyText    String
+  image       String?
+  updatedAt   DateTime @updatedAt
+}
+
+// One row per public page view, recorded first-party by the /px tracking pixel
+// (src/app/px/route.ts). Self-hosted on purpose: hosted analytics (Google Analytics,
+// Plausible Cloud, …) are either blocked from Iran or block Iranian traffic, so their
+// script would simply not load for most of this site's audience.
+//
+// No IP address is ever stored. `visitorHash` is a keyed hash of IP + User-Agent that is
+// re-salted every calendar month (see src/lib/analytics.ts), which is what makes
+// COUNT(DISTINCT visitorHash) a correct "how many people" figure for both a day inside
+// that month and the month as a whole.
+//
+// `day` ("YYYY-MM-DD") and `month` ("YYYY-MM") are stored as strings in Tehran local
+// time. SQLite's own date functions are UTC-only, so grouping on createdAt would put
+// the +03:30 evening traffic on the wrong day.
+model PageView {
+  id          String   @id @default(cuid())
+  path        String
+  visitorHash String
+  day         String
+  month       String
+  createdAt   DateTime @default(now())
+
+  @@index([day, visitorHash])
+  @@index([month, visitorHash])
+  @@index([createdAt])
+}

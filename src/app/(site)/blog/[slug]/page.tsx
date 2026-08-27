@@ -6,15 +6,33 @@ import Button from "@/components/ui/Button";
 import PlaceholderMedia from "@/components/ui/PlaceholderMedia";
 import { prisma } from "@/lib/prisma";
 import { hashVariant } from "@/lib/placeholder-icon";
+import { blogParagraphs, readTime } from "@/lib/blog";
 
 const icons = [BookOpen, Dumbbell, Salad, HeartPulse, Timer, Brain];
 
-function readTime(text: string) {
-  const words = text.trim().split(/\s+/).length;
-  const minutes = Math.max(1, Math.round(words / 120));
-  return `${minutes} دقیقه مطالعه`;
+/**
+ * Next.js hands a dynamic route param to the page **still percent-encoded**, so a slug
+ * with any non-ASCII character (a post the coach titled in Persian and never gave an
+ * English slug) would never match the stored value and the post would 404 — while
+ * `generateMetadata` appeared to find it. Decoding here is what makes Persian slugs
+ * work; it is a no-op for the ASCII ones.
+ *
+ * `decodeURIComponent` throws on a malformed escape like `/blog/%`, which is a request
+ * for a post that cannot exist.
+ */
+function decodeSlug(slug: string): string | null {
+  try {
+    return decodeURIComponent(slug);
+  } catch {
+    return null;
+  }
 }
 
+/**
+ * Prerenders the posts that exist at build time. `dynamicParams` is left at its default
+ * of true, so a post the coach publishes afterwards is rendered on demand and needs no
+ * rebuild.
+ */
 export async function generateStaticParams() {
   const posts = await prisma.blogPost.findMany({ where: { published: true }, select: { slug: true } });
   return posts.map((post) => ({ slug: post.slug }));
@@ -24,9 +42,12 @@ export async function generateMetadata({
   params,
 }: PageProps<"/blog/[slug]">): Promise<Metadata> {
   const { slug } = await params;
-  const post = await prisma.blogPost.findUnique({ where: { slug } });
+  const decoded = decodeSlug(slug);
+  const post = decoded
+    ? await prisma.blogPost.findUnique({ where: { slug: decoded } })
+    : null;
 
-  if (!post) return {};
+  if (!post || !post.published) return {};
 
   return {
     title: `${post.title} | کوچ فیت`,
@@ -36,12 +57,15 @@ export async function generateMetadata({
 
 export default async function BlogPostPage({ params }: PageProps<"/blog/[slug]">) {
   const { slug } = await params;
-  const post = await prisma.blogPost.findUnique({ where: { slug } });
+  const decoded = decodeSlug(slug);
+  const post = decoded
+    ? await prisma.blogPost.findUnique({ where: { slug: decoded } })
+    : null;
 
   if (!post || !post.published) notFound();
 
   const variant = hashVariant(post.id);
-  const paragraphs = post.content.split("\n").filter(Boolean);
+  const paragraphs = blogParagraphs(post.content);
 
   return (
     <article className="py-16">

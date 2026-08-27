@@ -5,6 +5,8 @@ import Container from "@/components/ui/Container";
 import PlaceholderMedia from "@/components/ui/PlaceholderMedia";
 import FadeIn from "@/components/motion/FadeIn";
 import CTA from "@/components/sections/CTA";
+import { aboutParagraphs } from "@/lib/about";
+import { getAboutContent } from "@/lib/about-content";
 
 export const metadata: Metadata = {
   title: "درباره من | کوچ فیت",
@@ -34,13 +36,14 @@ const reasons = [
   },
 ];
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  // Copy and photo are edited from /admin/about; the "چرا با من تمرین کنی؟" cards above
+  // are fixed, since they describe how the coaching works rather than the coach.
+  const about = await getAboutContent();
+
   return (
     <>
-      <PageHeader
-        eyebrow="درباره من"
-        title="مربی‌ای که کنارت می‌مونه، نه فقط یک برنامه می‌ده"
-      />
+      <PageHeader eyebrow={about.eyebrow} title={about.heading} />
 
       <section className="py-16">
         <Container className="grid items-center gap-10 md:grid-cols-2">
@@ -48,24 +51,18 @@ export default function AboutPage() {
             <PlaceholderMedia
               icon={Sparkles}
               variant={1}
+              src={about.image}
+              alt={about.heading}
               className="aspect-[4/5] w-full rounded-[2.5rem]"
             />
           </FadeIn>
 
           <FadeIn delay={0.15} className="flex flex-col gap-4 text-right">
-            <p className="leading-8 text-ink-500">
-              چند سالیه که در باشگاه‌های شیراز مربیگری می‌کنم و کنار شاگردهام هستم تا به
-              هدفشون برسن؛ چه چربی‌سوزی، چه عضله‌سازی، چه فقط یک سبک زندگی سالم‌تر.
-            </p>
-            <p className="leading-8 text-ink-500">
-              باور دارم بهترین برنامه، برنامه‌ایه که با زندگی واقعی هرکس هماهنگ باشه؛ برای
-              همین قبل از نوشتن هر برنامه، اول واقعاً گوش می‌دم به هدف، محدودیت‌ها و شرایط
-              شاگردم.
-            </p>
-            <p className="leading-8 text-ink-500">
-              برای شاگردهای شیرازی حضوری تمرین می‌دم و برای بقیه‌ی ایران، مربیگری آنلاین با
-              پیگیری روزانه و ارتباط مستقیم رو ارائه می‌دم.
-            </p>
+            {aboutParagraphs(about.bodyText).map((paragraph) => (
+              <p key={paragraph} className="leading-8 text-ink-500">
+                {paragraph}
+              </p>
+            ))}
           </FadeIn>
         </Container>
       </section>

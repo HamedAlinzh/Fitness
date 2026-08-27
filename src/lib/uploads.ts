@@ -4,7 +4,13 @@ import { mkdir, unlink, writeFile } from "node:fs/promises";
 import path from "node:path";
 
 export const UPLOAD_URL_PREFIX = "/uploads/";
-const UPLOAD_DIR = path.join(process.cwd(), "public", "uploads");
+
+/**
+ * Files live under `public/uploads/`, but they are *served* by the route handler at
+ * src/app/uploads/[file]/route.ts — Next.js only serves `public/` entries that existed
+ * when the app was built, and these are written at runtime.
+ */
+export const UPLOAD_DIR = path.join(process.cwd(), "public", "uploads");
 
 export const MAX_UPLOAD_BYTES = 5 * 1024 * 1024; // 5MB
 
@@ -39,6 +45,20 @@ function sniffType(bytes: Uint8Array): string | null {
     return "image/webp";
   }
   return null;
+}
+
+/** ALLOWED_TYPES read backwards, so the two directions can never disagree. */
+const CONTENT_TYPES: Record<string, string> = Object.fromEntries(
+  Object.entries(ALLOWED_TYPES).map(([type, ext]) => [ext, type])
+);
+
+/**
+ * The type to serve a stored file as. Derived from the extension *we* chose from the
+ * sniffed bytes at save time, so it is never influenced by anything a client sent.
+ */
+export function contentTypeFor(filename: string): string {
+  const ext = path.extname(filename).slice(1).toLowerCase();
+  return CONTENT_TYPES[ext] ?? "application/octet-stream";
 }
 
 export type UploadResult =

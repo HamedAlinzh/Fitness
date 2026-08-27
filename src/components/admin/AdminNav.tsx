@@ -9,6 +9,9 @@ import {
   Inbox,
   Receipt,
   Tag,
+  UserRound,
+  BarChart3,
+  Newspaper,
 } from "lucide-react";
 import { cn } from "@/lib/cn";
 
@@ -16,9 +19,12 @@ const links = [
   { href: "/admin", label: "داشبورد", icon: LayoutDashboard },
   { href: "/admin/testimonials", label: "نظرات", icon: MessageSquareQuote },
   { href: "/admin/media", label: "تصاویر", icon: Images },
+  { href: "/admin/blog", label: "بلاگ", icon: Newspaper },
   { href: "/admin/leads", label: "درخواست‌های مشاوره", icon: Inbox },
   { href: "/admin/packages", label: "پلن‌ها و قیمت", icon: Tag },
   { href: "/admin/orders", label: "لینک‌های پرداخت", icon: Receipt },
+  { href: "/admin/about", label: "درباره من", icon: UserRound },
+  { href: "/admin/analytics", label: "بازدیدها", icon: BarChart3 },
 ];
 
 export default function AdminNav() {

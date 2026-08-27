@@ -1,19 +1,30 @@
 import Link from "next/link";
-import { MessageSquareQuote, Images, Inbox, Clock } from "lucide-react";
+import { MessageSquareQuote, Images, Inbox, BarChart3, Clock } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/auth/dal";
+import { getAnalyticsSummary } from "@/lib/analytics";
+
+// The visit counters are live figures, so this page can't be served from a cache.
+export const dynamic = "force-dynamic";
 
 export default async function AdminDashboardPage() {
   await requireAdmin();
 
-  const [pendingTestimonials, totalTestimonials, galleryCount, newLeads, totalLeads] =
-    await Promise.all([
-      prisma.testimonial.count({ where: { approved: false } }),
-      prisma.testimonial.count(),
-      prisma.galleryItem.count(),
-      prisma.lead.count({ where: { status: "NEW" } }),
-      prisma.lead.count(),
-    ]);
+  const [
+    pendingTestimonials,
+    totalTestimonials,
+    galleryCount,
+    newLeads,
+    totalLeads,
+    analytics,
+  ] = await Promise.all([
+    prisma.testimonial.count({ where: { approved: false } }),
+    prisma.testimonial.count(),
+    prisma.galleryItem.count(),
+    prisma.lead.count({ where: { status: "NEW" } }),
+    prisma.lead.count(),
+    getAnalyticsSummary(),
+  ]);
 
   const cards = [
     {
@@ -36,6 +47,13 @@ export default async function AdminDashboardPage() {
       label: "درخواست‌های جدید مشاوره",
       value: newLeads,
       hint: `از مجموع ${totalLeads} درخواست`,
+    },
+    {
+      href: "/admin/analytics",
+      icon: BarChart3,
+      label: "بازدید امروز",
+      value: analytics.today.views,
+      hint: `${analytics.today.visitors.toLocaleString("fa-IR")} نفر امروز · ${analytics.month.views.toLocaleString("fa-IR")} بازدید در ${analytics.monthLabel}`,
     },
   ];
 

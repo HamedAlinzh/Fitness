@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Clock, BookOpen, Dumbbell, Salad, HeartPulse, Timer, Brain } from "lucide-react";
 import PlaceholderMedia from "@/components/ui/PlaceholderMedia";
 import { hashVariant } from "@/lib/placeholder-icon";
+import { readTime } from "@/lib/blog";
 
 const icons = [BookOpen, Dumbbell, Salad, HeartPulse, Timer, Brain];
 
@@ -12,12 +13,6 @@ export type BlogPostData = {
   excerpt: string;
   coverImage: string | null;
 };
-
-function readTime(text: string) {
-  const words = text.trim().split(/\s+/).length;
-  const minutes = Math.max(1, Math.round(words / 120));
-  return `${minutes} دقیقه مطالعه`;
-}
 
 export default function BlogCard({
   post,

@@ -231,10 +231,12 @@ async function main() {
     await prisma.galleryItem.create({ data: item });
   }
 
+  // Create-only: blog posts are edited from /admin/blog, so re-seeding must not
+  // overwrite the coach's rewrites the way it does for packages.
   for (const post of blogPosts) {
     await prisma.blogPost.upsert({
       where: { slug: post.slug },
-      update: post,
+      update: {},
       create: { ...post, publishedAt: new Date() },
     });
   }
