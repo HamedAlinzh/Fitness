@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { Vazirmatn } from "next/font/google";
 import "./globals.css";
+import { SITE_NAME, SITE_TAGLINE } from "@/lib/brand";
 
 const vazirmatn = Vazirmatn({
   variable: "--font-vazirmatn",
@@ -9,9 +10,8 @@ const vazirmatn = Vazirmatn({
 });
 
 export const metadata: Metadata = {
-  title: "مربی شخصی | برنامه تمرینی و مشاوره ورزشی",
-  description:
-    "مربیگری حرفه‌ای بدنسازی و تناسب اندام، به صورت حضوری در شیراز و آنلاین در سراسر ایران.",
+  title: `${SITE_NAME} | مربی شخصی، برنامه تمرینی و مشاوره ورزشی`,
+  description: SITE_TAGLINE,
 };
 
 /**

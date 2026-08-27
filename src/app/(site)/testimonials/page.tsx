@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageTitle } from "@/lib/brand";
 import PageHeader from "@/components/sections/PageHeader";
 import Container from "@/components/ui/Container";
 import TestimonialCard from "@/components/sections/TestimonialCard";
@@ -9,7 +10,7 @@ import CTA from "@/components/sections/CTA";
 import { prisma } from "@/lib/prisma";
 
 export const metadata: Metadata = {
-  title: "نظرات شاگردان | کوچ فیت",
+  title: pageTitle("نظرات شاگردان"),
   description: "تجربه‌ی شاگردهایی که با برنامه اختصاصی به هدفشون رسیدن.",
 };
 

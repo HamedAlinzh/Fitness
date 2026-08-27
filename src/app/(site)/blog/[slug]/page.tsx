@@ -7,6 +7,7 @@ import PlaceholderMedia from "@/components/ui/PlaceholderMedia";
 import { prisma } from "@/lib/prisma";
 import { hashVariant } from "@/lib/placeholder-icon";
 import { blogParagraphs, readTime } from "@/lib/blog";
+import { pageTitle } from "@/lib/brand";
 
 const icons = [BookOpen, Dumbbell, Salad, HeartPulse, Timer, Brain];
 
@@ -50,7 +51,7 @@ export async function generateMetadata({
   if (!post || !post.published) return {};
 
   return {
-    title: `${post.title} | کوچ فیت`,
+    title: pageTitle(post.title),
     description: post.excerpt,
   };
 }

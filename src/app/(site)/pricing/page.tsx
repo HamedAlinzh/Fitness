@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageTitle } from "@/lib/brand";
 import PageHeader from "@/components/sections/PageHeader";
 import PricingPlans from "@/components/sections/PricingPlans";
 import PricingFaq from "@/components/sections/PricingFaq";
@@ -7,7 +8,7 @@ import CTA from "@/components/sections/CTA";
 import { prisma } from "@/lib/prisma";
 
 export const metadata: Metadata = {
-  title: "پلن‌ها و قیمت‌گذاری | کوچ فیت",
+  title: pageTitle("پلن‌ها و قیمت‌گذاری"),
   description:
     "پلن‌های مربیگری آنلاین برای شاگردان داخل و خارج از کشور؛ نیمه‌خصوصی، VIP و کلاس گروهی.",
 };

@@ -12,6 +12,7 @@ import {
   UserRound,
   BarChart3,
   Newspaper,
+  AtSign,
 } from "lucide-react";
 import { cn } from "@/lib/cn";
 
@@ -20,6 +21,7 @@ const links = [
   { href: "/admin/testimonials", label: "نظرات", icon: MessageSquareQuote },
   { href: "/admin/media", label: "تصاویر", icon: Images },
   { href: "/admin/blog", label: "بلاگ", icon: Newspaper },
+  { href: "/admin/instagram", label: "اینستاگرام", icon: AtSign },
   { href: "/admin/leads", label: "درخواست‌های مشاوره", icon: Inbox },
   { href: "/admin/packages", label: "پلن‌ها و قیمت", icon: Tag },
   { href: "/admin/orders", label: "لینک‌های پرداخت", icon: Receipt },

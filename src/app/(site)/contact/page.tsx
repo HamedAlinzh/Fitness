@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageTitle } from "@/lib/brand";
 import { Phone, MapPin, Send, type LucideIcon } from "lucide-react";
 import PageHeader from "@/components/sections/PageHeader";
 import Container from "@/components/ui/Container";
@@ -8,7 +9,7 @@ import { COACH_PHONE, COACH_PHONE_DISPLAY } from "@/lib/site-contact";
 import { telUrl } from "@/lib/contact-links";
 
 export const metadata: Metadata = {
-  title: "تماس با من | کوچ فیت",
+  title: pageTitle("تماس با من"),
   description: "درخواست مشاوره رایگان و شروع همکاری، حضوری یا آنلاین.",
 };
 

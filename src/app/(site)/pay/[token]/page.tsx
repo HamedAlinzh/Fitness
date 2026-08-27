@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageTitle } from "@/lib/brand";
 import { notFound } from "next/navigation";
 import {
   CheckCircle2,
@@ -16,7 +17,7 @@ import { COACH_PHONE, COACH_PHONE_DISPLAY } from "@/lib/site-contact";
 import { telUrl, whatsappUrl } from "@/lib/contact-links";
 
 export const metadata: Metadata = {
-  title: "پرداخت پلن | کوچ فیت",
+  title: pageTitle("پرداخت پلن"),
   // A payment link is addressed by an unguessable token; it must never be indexed.
   robots: { index: false, follow: false },
 };

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useRef } from "react";
+import { SITE_LOGO_MARK, SITE_NAME } from "@/lib/brand";
 
 const navLinks = [
   { href: "/", label: "خانه" },
@@ -32,9 +33,10 @@ export default function Navbar() {
       <nav className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 sm:px-6">
         <Link href="/" className="flex items-center gap-2 text-lg font-extrabold text-red-600">
           <span className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-red-400 to-red-600 text-white">
-            ف
+            {SITE_LOGO_MARK}
           </span>
-          کوچ فیت
+          {/* A Latin name inside an RTL line: dir="ltr" keeps the words in order. */}
+          <span dir="ltr">{SITE_NAME}</span>
         </Link>
 
         <ul className="hidden items-center gap-8 md:flex">

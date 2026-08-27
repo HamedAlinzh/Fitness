@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageTitle } from "@/lib/brand";
 import PageHeader from "@/components/sections/PageHeader";
 import Container from "@/components/ui/Container";
 import BlogCard from "@/components/sections/BlogCard";
@@ -6,7 +7,7 @@ import FadeIn from "@/components/motion/FadeIn";
 import { prisma } from "@/lib/prisma";
 
 export const metadata: Metadata = {
-  title: "بلاگ | کوچ فیت",
+  title: pageTitle("بلاگ"),
   description: "مقالات آموزشی درباره تمرین، تغذیه و سبک زندگی سالم.",
 };
 

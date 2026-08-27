@@ -9,8 +9,12 @@
 
 export const COACH_PHONE = "09209102800";
 
-/** Optional; when set it's preferred over the phone link for Telegram. */
-export const COACH_TELEGRAM_USERNAME: string | null = null;
+/**
+ * Optional; when set it's preferred over the phone link for Telegram. It matters here
+ * because `t.me/+<number>` only resolves when the recipient allows "Who can find me by
+ * my phone number", and a username link always works.
+ */
+export const COACH_TELEGRAM_USERNAME: string | null = "PariaSajadiyan";
 
 const PERSIAN_DIGITS = "۰۱۲۳۴۵۶۷۸۹";
 

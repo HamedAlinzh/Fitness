@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
+import { pageTitle } from "@/lib/brand";
 import PageHeader from "@/components/sections/PageHeader";
 import GalleryGrid from "@/components/sections/GalleryGrid";
 import { prisma } from "@/lib/prisma";
 
 export const metadata: Metadata = {
-  title: "گالری | کوچ فیت",
+  title: pageTitle("گالری"),
   description: "عکس و ویدیوی روزانه‌ی تمرین‌ها و لحظات باشگاه.",
 };
 

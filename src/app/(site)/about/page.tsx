@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageTitle } from "@/lib/brand";
 import { Sparkles, GraduationCap, Users2, MapPinned, MessageSquareHeart } from "lucide-react";
 import PageHeader from "@/components/sections/PageHeader";
 import Container from "@/components/ui/Container";
@@ -9,7 +10,7 @@ import { aboutParagraphs } from "@/lib/about";
 import { getAboutContent } from "@/lib/about-content";
 
 export const metadata: Metadata = {
-  title: "درباره من | کوچ فیت",
+  title: pageTitle("درباره من"),
   description: "آشنایی با مربی، مسیر مربیگری و نگاه من به تمرین و تناسب اندام.",
 };
 
