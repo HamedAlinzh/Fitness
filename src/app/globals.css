@@ -1,19 +1,19 @@
 @import "tailwindcss";
 
 :root {
-  --background: #fff6f4;
+  --background: #fff4fd;
   --foreground: #2b1413;
 
-  --color-red-50: #fff2f1;
-  --color-red-100: #ffdfdc;
-  --color-red-200: #ffbdb8;
-  --color-red-300: #f7938c;
-  --color-red-400: #e6605a;
-  --color-red-500: #DA0037;
-  --color-red-600: #a51d20;
-  --color-red-700: #85161a;
-  --color-red-800: #661215;
-  --color-red-900: #450d0f;
+  --color-red-50: #f9d0ec;
+  --color-red-100: #ffdcf5;
+  --color-red-200: #ffb8f0;
+  --color-red-300: #f78cde;
+  --color-red-400: #e65acc;
+  --color-red-500: #fe5d9f;
+  --color-red-600: #eb2e89;
+  --color-red-700: #ef2ba1;
+  --color-red-800: #940c5d;
+  --color-red-900: #8f115d;
 
   --color-ink-50: #f6f2f1;
   --color-ink-100: #e9e0de;
