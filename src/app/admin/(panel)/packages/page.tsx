@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/auth/dal";
 import { setHighlightedPackage } from "@/lib/actions/packages";
 import PackagePriceForm from "@/components/admin/PackagePriceForm";
+import PackageEnglishForm from "@/components/admin/PackageEnglishForm";
 import { cn } from "@/lib/cn";
 
 export default async function AdminPackagesPage() {
@@ -86,6 +87,15 @@ export default async function AdminPackagesPage() {
 
             <div className="border-t border-red-100 pt-4">
               <PackagePriceForm id={pkg.id} priceToman={pkg.priceToman} />
+            </div>
+
+            <div className="border-t border-red-100 pt-4">
+              <PackageEnglishForm
+                id={pkg.id}
+                titleEn={pkg.titleEn}
+                periodLabelEn={pkg.periodLabelEn}
+                featuresEn={pkg.featuresEn}
+              />
             </div>
           </article>
         );

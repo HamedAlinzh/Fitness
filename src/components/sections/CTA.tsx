@@ -2,8 +2,13 @@ import { MessageCircle } from "lucide-react";
 import Container from "@/components/ui/Container";
 import Button from "@/components/ui/Button";
 import FadeIn from "@/components/motion/FadeIn";
+import { getDict, getLocale } from "@/i18n/server";
+import { localePath } from "@/i18n/config";
 
-export default function CTA() {
+export default async function CTA() {
+  const lang = await getLocale();
+  const { cta } = await getDict();
+
   return (
     <section className="py-20">
       <Container>
@@ -17,14 +22,13 @@ export default function CTA() {
                 <MessageCircle className="h-7 w-7" strokeWidth={1.75} />
               </span>
               <h2 className="max-w-xl text-3xl font-extrabold text-white sm:text-4xl">
-                آماده‌ای مسیر جدیدت رو شروع کنی؟
+                {cta.title}
               </h2>
               <p className="max-w-md text-sm leading-7 text-red-50">
-                یه پیام بفرست تا هدفت رو بشنوم و بهترین برنامه رو باهم بچینیم؛
-                حضوری در شیراز یا آنلاین از هر جای ایران.
+                {cta.description}
               </p>
-              <Button href="/contact" variant="light">
-                رزرو مشاوره رایگان
+              <Button href={localePath(lang, "/contact")} variant="light">
+                {cta.button}
               </Button>
             </div>
           </div>

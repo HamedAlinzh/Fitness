@@ -1,11 +1,11 @@
 import { requireAdmin } from "@/lib/auth/dal";
-import { getAboutContent } from "@/lib/about-content";
+import { getAboutEditable } from "@/lib/about-content";
 import AboutContentForm from "@/components/admin/AboutContentForm";
 
 export default async function AdminAboutPage() {
   await requireAdmin();
 
-  const about = await getAboutContent();
+  const about = await getAboutEditable();
 
   return (
     <div className="flex flex-col gap-6">

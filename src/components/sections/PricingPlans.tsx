@@ -1,8 +1,8 @@
 import { MapPin } from "lucide-react";
 import Container from "@/components/ui/Container";
-import PricingCard, {
-  type PackageData,
-} from "@/components/sections/PricingCard";
+import PricingCard from "@/components/sections/PricingCard";
+import type { PackageData } from "@/lib/packages";
+import { getDict } from "@/i18n/server";
 import FadeIn from "@/components/motion/FadeIn";
 import { COACH_PHONE } from "@/lib/site-contact";
 import { whatsappUrl } from "@/lib/contact-links";
@@ -17,16 +17,15 @@ import { whatsappUrl } from "@/lib/contact-links";
  * plans, with the rest unreachable. Same class of bug as the consultation form's "next"
  * button; see the note in CLAUDE.md.
  */
-export default function PricingPlans({ plans }: { plans: PackageData[] }) {
-  const inPersonMessage =
-    "سلام، درباره مربیگری حضوری در شیراز می‌خواستم صحبت کنم.";
+export default async function PricingPlans({ plans }: { plans: PackageData[] }) {
+  const { pricing: t } = await getDict();
 
   return (
     <section className="py-16">
       <Container className="flex flex-col gap-10">
         {plans.length === 0 ? (
           <p className="text-center text-sm text-ink-500">
-            فعلاً پلنی ثبت نشده است.
+            {t.empty}
           </p>
         ) : (
           <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
@@ -40,17 +39,17 @@ export default function PricingPlans({ plans }: { plans: PackageData[] }) {
 
         <p className="mx-auto flex max-w-2xl flex-wrap items-center justify-center gap-x-2 gap-y-1 rounded-2xl bg-red-50/60 px-6 py-4 text-center text-sm leading-7 text-ink-700">
           <MapPin className="h-4 w-4 shrink-0 text-red-500" />
-          برای مربیگری <span className="font-bold">حضوری در شیراز</span> 
-           —{" "}
+          {t.inPerson.before}{" "}
+          <span className="font-bold">{t.inPerson.bold}</span> —{" "}
           <a
-            href={whatsappUrl(COACH_PHONE, inPersonMessage)}
+            href={whatsappUrl(COACH_PHONE, t.inPerson.message)}
             target="_blank"
             rel="noopener noreferrer"
             className="font-bold text-red-600 underline underline-offset-4 hover:text-red-700"
           >
-            پیام بده
+            {t.inPerson.link}
           </a>{" "}
-          تا باهم هماهنگ کنیم.
+          {t.inPerson.after}
         </p>
       </Container>
     </section>

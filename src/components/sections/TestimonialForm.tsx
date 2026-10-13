@@ -22,7 +22,7 @@ export default function TestimonialForm() {
     <form
       ref={formRef}
       action={action}
-      className="flex flex-col gap-4 rounded-3xl border border-red-100 bg-white p-6 text-right sm:p-8"
+      className="flex flex-col gap-4 rounded-3xl border border-red-100 bg-white p-6 text-start sm:p-8"
     >
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="flex flex-col gap-1.5">

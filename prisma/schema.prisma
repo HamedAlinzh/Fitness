@@ -111,15 +111,21 @@ model Testimonial {
 // turned every price edit into a factor-of-1000 guess. Convert to rial for an order
 // only via the helpers in src/lib/orders.ts.
 model Package {
-  id           String   @id @default(cuid())
-  title        String
-  description  String
-  priceToman   Int
-  periodLabel  String
-  features     String
-  type         String   @default("ONLINE")
-  highlighted  Boolean  @default(false)
-  createdAt    DateTime @default(now())
+  id            String   @id @default(cuid())
+  title         String
+  description   String
+  priceToman    Int
+  periodLabel   String
+  features      String
+  // English versions shown on /en. Optional: a blank value falls back to the Persian
+  // text above, so the coach can translate plan by plan. `featuresEn` is a JSON-encoded
+  // string array like `features`; "[]" means "not translated".
+  titleEn       String   @default("")
+  periodLabelEn String   @default("")
+  featuresEn    String   @default("[]")
+  type          String   @default("ONLINE")
+  highlighted   Boolean  @default(false)
+  createdAt     DateTime @default(now())
 
   orders Order[]
 }
@@ -140,22 +146,22 @@ model Package {
 // `customerPhone` is admin-only contact data; never select it into a public query.
 // The public /pay/[token] page is an exception and shows only what the payer typed.
 model Order {
-  id            String    @id @default(cuid())
-  token         String    @unique
-  packageId     String
-  customerName  String
-  customerPhone String
-  amountRial    Int
-  status        String    @default("PENDING")
-  note          String?
-  expiresAt     DateTime?
-  paidAt        DateTime?
+  id               String    @id @default(cuid())
+  token            String    @unique
+  packageId        String
+  customerName     String
+  customerPhone    String
+  amountRial       Int
+  status           String    @default("PENDING")
+  note             String?
+  expiresAt        DateTime?
+  paidAt           DateTime?
   // Filled in by the payment gateway once one is connected. Named generically so
   // swapping ZarinPal for another PSP doesn't need a migration.
   gateway          String?
   gatewayAuthority String?
   gatewayRefId     String?
-  createdAt     DateTime  @default(now())
+  createdAt        DateTime  @default(now())
 
   package Package @relation(fields: [packageId], references: [id])
 }
@@ -185,6 +191,9 @@ model Lead {
   hasInjury        Boolean  @default(false)
   injuryNote       String?
   message          String?
+  // Language of the page the request was sent from ("fa" | "en"), so the coach knows
+  // which language to reply in.
+  locale           String   @default("fa")
   status           String   @default("NEW")
   createdAt        DateTime @default(now())
 }
@@ -209,13 +218,18 @@ model Message {
 // `bodyText` holds the /about page's paragraphs separated by blank lines — SQLite has no
 // scalar lists, and a textarea is the natural editor for prose anyway.
 model AboutContent {
-  id          String   @id @default("about")
-  eyebrow     String
-  heading     String
-  previewText String
-  bodyText    String
-  image       String?
-  updatedAt   DateTime @updatedAt
+  id            String   @id @default("about")
+  eyebrow       String
+  heading       String
+  previewText   String
+  bodyText      String
+  image         String?
+  // English versions shown on /en; blank falls back (see src/lib/about-content.ts).
+  eyebrowEn     String   @default("")
+  headingEn     String   @default("")
+  previewTextEn String   @default("")
+  bodyTextEn    String   @default("")
+  updatedAt     DateTime @updatedAt
 }
 
 // One row per public page view, recorded first-party by the /px tracking pixel

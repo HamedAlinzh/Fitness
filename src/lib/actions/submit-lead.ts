@@ -2,7 +2,9 @@
 
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
-import { normalizePhone } from "@/lib/phone";
+import { normalizeContactPhone } from "@/lib/phone";
+import { isLocale, type Locale } from "@/i18n/config";
+import { getDictionary } from "@/i18n/dictionaries";
 import {
   GOALS,
   LEVELS,
@@ -30,6 +32,12 @@ export async function submitLead(
 ): Promise<SubmitLeadState> {
   const get = (k: string) => String(formData.get(k) ?? "").trim();
 
+  // Which page the form was on. It only chooses the language of the replies and of the
+  // coach's follow-up; an unknown value just means Persian.
+  const rawLocale = get("locale");
+  const locale: Locale = isLocale(rawLocale) ? rawLocale : "fa";
+  const t = getDictionary(locale).consultation;
+
   const name = get("name");
   const goal = get("goal");
   const level = get("level");
@@ -48,16 +56,16 @@ export async function submitLead(
     !isValid(DAYS_PER_WEEK, days) ||
     !isValid(CHANNELS, preferredChannel)
   ) {
-    return { error: "لطفاً به همه‌ی سؤال‌ها پاسخ بدهید." };
+    return { error: t.errors.answerAll };
   }
 
   if (name.length < 2 || name.length > 50) {
-    return { error: "نام را بین ۲ تا ۵۰ کاراکتر وارد کنید." };
+    return { error: t.errors.name };
   }
 
-  const phone = normalizePhone(get("phone"));
+  const phone = normalizeContactPhone(get("phone"));
   if (!phone) {
-    return { error: "شماره موبایل معتبر نیست. نمونه: ۰۹۱۲۳۴۵۶۷۸۹" };
+    return { error: t.errors.phone };
   }
 
   // Stored without the leading @ so link building stays predictable.
@@ -65,7 +73,7 @@ export async function submitLead(
     get("telegramUsername").replace(/^@/, "").trim() || null;
 
   if (telegramUsername && !/^[A-Za-z0-9_]{5,32}$/.test(telegramUsername)) {
-    return { error: "آیدی تلگرام معتبر نیست. نمونه: my_username" };
+    return { error: t.errors.telegram };
   }
 
   // Cheap double-submit guard, matching the testimonial form's behaviour.
@@ -75,10 +83,7 @@ export async function submitLead(
   });
 
   if (duplicate) {
-    return {
-      success:
-        "درخواست شما قبلاً ثبت شده و در نوبت بررسی است. به‌زودی باهات تماس می‌گیرم.",
-    };
+    return { success: t.duplicate };
   }
 
   await prisma.lead.create({
@@ -94,6 +99,7 @@ export async function submitLead(
       hasInjury,
       injuryNote: hasInjury && injuryNote ? injuryNote : null,
       message: message || null,
+      locale,
       status: "NEW",
     },
   });
@@ -101,8 +107,5 @@ export async function submitLead(
   revalidatePath("/admin/leads");
   revalidatePath("/admin");
 
-  return {
-    success:
-      "درخواست مشاوره‌ات ثبت شد. به‌زودی از همون راهی که انتخاب کردی باهات تماس می‌گیرم.",
-  };
+  return { success: t.success };
 }

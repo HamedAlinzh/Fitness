@@ -1,6 +1,8 @@
 import Image from "next/image";
 import { X, ChevronLeft, ChevronRight } from "lucide-react";
 import { type GalleryItemData, isVideoItem } from "@/components/sections/GalleryTile";
+import { getDictionary } from "@/i18n/dictionaries";
+import type { Locale } from "@/i18n/config";
 
 export const GALLERY_ANCHOR = "gallery";
 
@@ -20,7 +22,18 @@ export function lightboxHref(item: GalleryItemData) {
  *
  * It also gets the back button for free: each opened item is a real history entry.
  */
-export default function GalleryLightbox({ items }: { items: GalleryItemData[] }) {
+export default function GalleryLightbox({
+  items,
+  lang,
+}: {
+  items: GalleryItemData[];
+  lang: Locale;
+}) {
+  const t = getDictionary(lang).gallery;
+  // Logical sides put "previous" on the start edge; which way its chevron points depends
+  // on whether that edge is the right (RTL) or the left (LTR).
+  const PreviousIcon = lang === "fa" ? ChevronRight : ChevronLeft;
+  const NextIcon = lang === "fa" ? ChevronLeft : ChevronRight;
   // Only items that actually have a file can be opened; the seeded placeholder rows have
   // nothing to show at full size.
   const viewable = items.filter((item) => item.url);
@@ -45,7 +58,7 @@ export default function GalleryLightbox({ items }: { items: GalleryItemData[] })
             {/* A backdrop that is itself a link, so tapping outside closes without JS. */}
             <a
               href={closeHref}
-              aria-label="بستن"
+              aria-label={t.close}
               className="absolute inset-0 cursor-default"
             />
 
@@ -77,7 +90,7 @@ export default function GalleryLightbox({ items }: { items: GalleryItemData[] })
 
             <a
               href={closeHref}
-              aria-label="بستن"
+              aria-label={t.close}
               className="absolute top-4 end-4 z-20 flex h-11 w-11 items-center justify-center rounded-full bg-white/15 text-white backdrop-blur-sm transition-colors hover:bg-white/25"
             >
               <X className="h-5 w-5" />
@@ -85,20 +98,20 @@ export default function GalleryLightbox({ items }: { items: GalleryItemData[] })
 
             {viewable.length > 1 && (
               <>
-                {/* Logical sides: in this RTL document `start` is the right edge. */}
+                {/* Logical sides, so the arrows mirror with the document direction. */}
                 <a
                   href={lightboxHref(previous)}
-                  aria-label="قبلی"
+                  aria-label={t.previous}
                   className="absolute top-1/2 start-2 z-20 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/15 text-white backdrop-blur-sm transition-colors hover:bg-white/25 sm:start-4"
                 >
-                  <ChevronRight className="h-5 w-5" />
+                  <PreviousIcon className="h-5 w-5" />
                 </a>
                 <a
                   href={lightboxHref(next)}
-                  aria-label="بعدی"
+                  aria-label={t.next}
                   className="absolute top-1/2 end-2 z-20 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/15 text-white backdrop-blur-sm transition-colors hover:bg-white/25 sm:end-4"
                 >
-                  <ChevronLeft className="h-5 w-5" />
+                  <NextIcon className="h-5 w-5" />
                 </a>
               </>
             )}

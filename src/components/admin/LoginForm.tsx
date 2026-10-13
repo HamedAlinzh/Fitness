@@ -11,7 +11,7 @@ export default function LoginForm() {
   );
 
   return (
-    <form action={action} className="flex flex-col gap-4 text-right">
+    <form action={action} className="flex flex-col gap-4 text-start">
       <div className="flex flex-col gap-1.5">
         <label htmlFor="email" className="text-sm font-medium text-ink-700">
           ایمیل

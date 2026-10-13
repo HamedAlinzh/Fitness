@@ -10,7 +10,14 @@ export type InstagramPostData = {
   thumbnail: string | null;
 };
 
-export default function InstagramPostTile({ post }: { post: InstagramPostData }) {
+export default function InstagramPostTile({
+  post,
+  label,
+}: {
+  post: InstagramPostData;
+  /** Accessible name; the admin preview omits it and gets the Persian default. */
+  label?: string;
+}) {
   const isReel = post.type === "REEL";
 
   return (
@@ -21,7 +28,7 @@ export default function InstagramPostTile({ post }: { post: InstagramPostData })
       // Posts carry no stored caption, so the link itself provides the accessible name
       // and the cover image below is treated as decorative (empty alt) to avoid
       // screen readers announcing the same tile twice.
-      aria-label={`مشاهده ${isReel ? "ریلز" : "پست"} در اینستاگرام`}
+      aria-label={label ?? `مشاهده ${isReel ? "ریلز" : "پست"} در اینستاگرام`}
       className="group relative block aspect-square overflow-hidden rounded-2xl"
     >
       <PlaceholderMedia

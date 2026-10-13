@@ -4,8 +4,12 @@ import SectionHeading from "@/components/ui/SectionHeading";
 import FadeIn from "@/components/motion/FadeIn";
 import TestimonialCard from "@/components/sections/TestimonialCard";
 import { prisma } from "@/lib/prisma";
+import { getDict, getLocale } from "@/i18n/server";
+import { localePath } from "@/i18n/config";
 
 export default async function TestimonialsPreview() {
+  const lang = await getLocale();
+  const { testimonialsPreview: t } = await getDict();
   const testimonials = await prisma.testimonial.findMany({
     where: { approved: true },
     orderBy: { createdAt: "desc" },
@@ -25,7 +29,7 @@ export default async function TestimonialsPreview() {
   return (
     <section className="py-20">
       <Container className="flex flex-col gap-12">
-        <SectionHeading eyebrow="نظرات شاگردان" title="تجربه‌ی کسایی که همراهم بودن" />
+        <SectionHeading eyebrow={t.eyebrow} title={t.title} />
 
         <div className="grid gap-6 md:grid-cols-3">
           {testimonials.map((testimonial, index) => (
@@ -36,8 +40,8 @@ export default async function TestimonialsPreview() {
         </div>
 
         <div className="flex justify-center">
-          <Button href="/testimonials" variant="ghost">
-            مشاهده همه نظرات ←
+          <Button href={localePath(lang, "/testimonials")} variant="ghost">
+            {t.all}
           </Button>
         </div>
       </Container>

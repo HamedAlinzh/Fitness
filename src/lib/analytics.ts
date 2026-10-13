@@ -195,7 +195,9 @@ export function normalizePath(pathname: string): string {
   if (!path.startsWith("/")) return "/";
 
   if (path.length > 1) path = path.replace(/\/+$/, "") || "/";
+  // Same for the English copy of the page, `/en/pay/<token>`.
   if (path.startsWith("/pay/")) path = "/pay/[token]";
+  if (path.startsWith("/en/pay/")) path = "/en/pay/[token]";
 
   return path.slice(0, MAX_PATH_LENGTH);
 }

@@ -144,7 +144,7 @@ export default async function AdminAnalyticsPage() {
           // The three columns fit a phone unaided; the scroller is only a safety net for
           // an unusually long page title.
           <div className="overflow-x-auto">
-            <table className="w-full text-right text-sm">
+            <table className="w-full text-start text-sm">
               <thead>
                 <tr className="text-xs text-ink-500">
                   <th className="pb-2 font-medium">صفحه</th>

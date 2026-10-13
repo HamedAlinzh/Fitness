@@ -6,8 +6,10 @@ import FadeIn from "@/components/motion/FadeIn";
 import InstagramPostTile from "@/components/sections/InstagramPostTile";
 import { INSTAGRAM_PROFILE_URL } from "@/lib/instagram";
 import { prisma } from "@/lib/prisma";
+import { getDict } from "@/i18n/server";
 
 export default async function InstagramFeed() {
+  const { instagram: t } = await getDict();
   const posts = await prisma.instagramPost.findMany({
     orderBy: { sortOrder: "asc" },
     take: 6,
@@ -19,14 +21,17 @@ export default async function InstagramFeed() {
     <section className="py-20">
       <Container className="flex flex-col gap-12">
         <SectionHeading
-          eyebrow="اینستاگرام"
-          title="آخرین پست‌ها رو دنبال کن!"
+          eyebrow={t.eyebrow}
+          title={t.title}
         />
 
         <div className="grid grid-cols-3 gap-3 sm:gap-4 md:grid-cols-6">
           {posts.map((post, index) => (
             <FadeIn key={post.id} delay={index * 0.05}>
-              <InstagramPostTile post={post} />
+              <InstagramPostTile
+                post={post}
+                label={post.type === "REEL" ? t.viewReel : t.viewPost}
+              />
             </FadeIn>
           ))}
         </div>
@@ -34,7 +39,7 @@ export default async function InstagramFeed() {
         <div className="flex justify-center">
           <Button href={INSTAGRAM_PROFILE_URL} external variant="secondary">
             <AtSign className="h-4 w-4" />
-            دنبال کردن در اینستاگرام
+            {t.follow}
           </Button>
         </div>
       </Container>

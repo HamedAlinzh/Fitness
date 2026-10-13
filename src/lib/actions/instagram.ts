@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { revalidatePublicSite } from "@/lib/revalidate";
 import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/auth/dal";
 import { deleteUpload, saveUpload } from "@/lib/uploads";
@@ -20,7 +21,7 @@ export type InstagramState = { error?: string; success?: string } | undefined;
 
 function revalidateFeed() {
   // The section only appears on the homepage.
-  revalidatePath("/");
+  revalidatePublicSite();
   revalidatePath("/admin/instagram");
 }
 

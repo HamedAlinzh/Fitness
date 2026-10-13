@@ -1,17 +1,31 @@
 import type { Metadata } from "next";
-import { pageTitle } from "@/lib/brand";
+import { pageMetadata } from "@/i18n/metadata";
+import { getDict, getLocale } from "@/i18n/server";
+import { isLocale } from "@/i18n/config";
+import { getDictionary } from "@/i18n/dictionaries";
 import { Phone, MapPin, Send, type LucideIcon } from "lucide-react";
 import PageHeader from "@/components/sections/PageHeader";
 import Container from "@/components/ui/Container";
 import ConsultationForm from "@/components/sections/ConsultationForm";
 import FadeIn from "@/components/motion/FadeIn";
-import { COACH_PHONE, COACH_PHONE_DISPLAY } from "@/lib/site-contact";
+import {
+  COACH_PHONE,
+  COACH_PHONE_DISPLAY,
+  COACH_PHONE_DISPLAY_INTL,
+} from "@/lib/site-contact";
 import { telUrl } from "@/lib/contact-links";
 
-export const metadata: Metadata = {
-  title: pageTitle("تماس با من"),
-  description: "درخواست مشاوره رایگان و شروع همکاری، حضوری یا آنلاین.",
-};
+export async function generateMetadata({
+  params,
+}: PageProps<"/[lang]/contact">): Promise<Metadata> {
+  const { lang } = await params;
+  if (!isLocale(lang)) return {};
+  const t = getDictionary(lang).contact;
+  return pageMetadata(lang, "/contact", {
+    title: t.metaTitle,
+    description: t.metaDescription,
+  });
+}
 
 type ContactItem = {
   icon: LucideIcon;
@@ -20,24 +34,26 @@ type ContactItem = {
   href?: string;
 };
 
-const contactInfo: ContactItem[] = [
-  {
-    icon: Phone,
-    label: "تلفن تماس",
-    value: COACH_PHONE_DISPLAY,
-    href: telUrl(COACH_PHONE),
-  },
-  { icon: Send, label: "پیام مستقیم", value: "از طریق همین فرم" },
-  { icon: MapPin, label: "موقعیت باشگاه", value: "شیراز" },
-];
+export default async function ContactPage() {
+  const { contact: t } = await getDict();
+  const lang = await getLocale();
+  const contactInfo: ContactItem[] = [
+    {
+      icon: Phone,
+      label: t.phone,
+      value: lang === "fa" ? COACH_PHONE_DISPLAY : COACH_PHONE_DISPLAY_INTL,
+      href: telUrl(COACH_PHONE),
+    },
+    { icon: Send, label: t.directMessage, value: t.viaForm },
+    { icon: MapPin, label: t.location, value: t.city },
+  ];
 
-export default function ContactPage() {
   return (
     <>
       <PageHeader
-        eyebrow="تماس با من"
-        title="آماده‌ای مسیر جدیدت رو شروع کنی؟"
-        description="فرم زیر رو پر کن تا هدفت رو ببینم و بهترین برنامه رو باهم بچینیم."
+        eyebrow={t.eyebrow}
+        title={t.title}
+        description={t.description}
       />
 
       <section className="py-16">
@@ -46,7 +62,7 @@ export default function ContactPage() {
             {contactInfo.map((item) => (
               <div
                 key={item.label}
-                className="flex items-center gap-4 rounded-3xl border border-red-100 bg-white p-5 text-right"
+                className="flex items-center gap-4 rounded-3xl border border-red-100 bg-white p-5 text-start"
               >
                 <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-red-100 text-red-600">
                   <item.icon className="h-5 w-5" strokeWidth={1.75} />
@@ -77,7 +93,7 @@ export default function ContactPage() {
             static info. On md+ the original two-column order is restored.
           */}
           <FadeIn delay={0.1} className="order-first md:order-none">
-            <ConsultationForm />
+            <ConsultationForm lang={lang} />
           </FadeIn>
         </Container>
       </section>

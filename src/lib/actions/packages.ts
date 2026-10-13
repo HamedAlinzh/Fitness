@@ -1,9 +1,11 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { revalidatePublicSite } from "@/lib/revalidate";
 import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/auth/dal";
 import { parsePriceToman } from "@/lib/orders";
+import { PACKAGE_EN_LIMITS } from "@/lib/packages";
 
 /**
  * Admin-only. Like every other action under the admin panel, each one calls
@@ -46,8 +48,7 @@ export async function updatePackagePrice(
   if (!updated) return { error: "پلن پیدا نشد." };
 
   // The public pages read prices directly, so they have to pick this up immediately.
-  revalidatePath("/pricing");
-  revalidatePath("/");
+  revalidatePublicSite();
   revalidatePath("/admin/packages");
   revalidatePath("/admin/orders");
 
@@ -79,7 +80,55 @@ export async function setHighlightedPackage(formData: FormData) {
       : [prisma.package.update({ where: { id }, data: { highlighted: true } })]),
   ]);
 
-  revalidatePath("/pricing");
-  revalidatePath("/");
+  revalidatePublicSite();
   revalidatePath("/admin/packages");
+}
+
+export type UpdatePackageEnglishState =
+  | { error?: string; success?: string }
+  | undefined;
+
+/**
+ * Saves the optional English text of one plan (shown on /en). Anything left blank falls
+ * back to the Persian text, so this can be filled in plan by plan.
+ */
+export async function updatePackageEnglish(
+  _prev: UpdatePackageEnglishState,
+  formData: FormData
+): Promise<UpdatePackageEnglishState> {
+  await requireAdmin();
+
+  const id = String(formData.get("id") ?? "");
+  if (!id) return { error: "پلن مشخص نیست." };
+
+  const titleEn = String(formData.get("titleEn") ?? "").trim();
+  const periodLabelEn = String(formData.get("periodLabelEn") ?? "").trim();
+  // One feature per line in the textarea; stored as a JSON array like `features`.
+  const features = String(formData.get("featuresEn") ?? "")
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter(Boolean);
+
+  if (
+    titleEn.length > PACKAGE_EN_LIMITS.title ||
+    periodLabelEn.length > PACKAGE_EN_LIMITS.periodLabel ||
+    features.length > PACKAGE_EN_LIMITS.features ||
+    features.some((feature) => feature.length > PACKAGE_EN_LIMITS.feature)
+  ) {
+    return { error: "یکی از متن‌ها از حد مجاز طولانی‌تر است." };
+  }
+
+  const updated = await prisma.package
+    .update({
+      where: { id },
+      data: { titleEn, periodLabelEn, featuresEn: JSON.stringify(features) },
+    })
+    .catch(() => null);
+
+  if (!updated) return { error: "پلن پیدا نشد." };
+
+  revalidatePublicSite();
+  revalidatePath("/admin/packages");
+
+  return { success: "نسخه‌ی انگلیسی ذخیره شد." };
 }

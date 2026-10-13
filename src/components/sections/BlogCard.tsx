@@ -2,7 +2,9 @@ import Link from "next/link";
 import { Clock, BookOpen, Dumbbell, Salad, HeartPulse, Timer, Brain } from "lucide-react";
 import PlaceholderMedia from "@/components/ui/PlaceholderMedia";
 import { hashVariant } from "@/lib/placeholder-icon";
-import { readTime } from "@/lib/blog";
+import { readMinutes } from "@/lib/blog";
+import { getDict, getLocale } from "@/i18n/server";
+import { localePath } from "@/i18n/config";
 
 const icons = [BookOpen, Dumbbell, Salad, HeartPulse, Timer, Brain];
 
@@ -14,19 +16,21 @@ export type BlogPostData = {
   coverImage: string | null;
 };
 
-export default function BlogCard({
+export default async function BlogCard({
   post,
   content,
 }: {
   post: BlogPostData;
   content?: string;
 }) {
+  const lang = await getLocale();
+  const { blog } = await getDict();
   const variant = hashVariant(post.id);
 
   return (
     <Link
-      href={`/blog/${post.slug}`}
-      className="flex h-full flex-col overflow-hidden rounded-3xl border border-red-100 bg-white text-right shadow-sm shadow-red-100/50 transition-shadow hover:shadow-lg hover:shadow-red-200/50"
+      href={localePath(lang, `/blog/${post.slug}`)}
+      className="flex h-full flex-col overflow-hidden rounded-3xl border border-red-100 bg-white text-start shadow-sm shadow-red-100/50 transition-shadow hover:shadow-lg hover:shadow-red-200/50"
     >
       <PlaceholderMedia
         icon={icons[variant % icons.length]}
@@ -40,7 +44,7 @@ export default function BlogCard({
         <p className="flex-1 text-sm leading-7 text-ink-500">{post.excerpt}</p>
         <span className="flex items-center gap-1 text-xs text-ink-500">
           <Clock className="h-3.5 w-3.5" />
-          {readTime(content ?? post.excerpt)}
+          {blog.readTime(String(readMinutes(content ?? post.excerpt)))}
         </span>
       </div>
     </Link>

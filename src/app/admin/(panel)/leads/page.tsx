@@ -46,7 +46,7 @@ export default async function AdminLeadsPage() {
   return (
     <div className="flex flex-col gap-4">
       {leads.map((lead) => {
-        const greeting = greetingFor(lead.name);
+        const greeting = greetingFor(lead.name, lead.locale);
         const preferred = labelOf(CHANNELS, lead.preferredChannel);
 
         const replyLinks = [
@@ -86,6 +86,14 @@ export default async function AdminLeadsPage() {
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div className="flex flex-wrap items-center gap-3">
                 <span className="font-bold text-ink-900">{lead.name}</span>
+                {lead.locale === "en" && (
+                  <span
+                    title="از صفحه‌ی انگلیسی سایت ارسال شده — به انگلیسی جواب بده"
+                    className="rounded-full bg-ink-900 px-2.5 py-0.5 text-[11px] font-bold text-white"
+                  >
+                    EN
+                  </span>
+                )}
                 <a
                   href={telUrl(lead.phone)}
                   dir="ltr"

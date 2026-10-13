@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { revalidatePublicSite } from "@/lib/revalidate";
 import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/auth/dal";
 
@@ -18,8 +19,7 @@ export async function setTestimonialApproval(formData: FormData) {
   await prisma.testimonial.update({ where: { id }, data: { approved } });
 
   revalidatePath("/admin/testimonials");
-  revalidatePath("/testimonials");
-  revalidatePath("/");
+  revalidatePublicSite();
 }
 
 export async function deleteTestimonial(formData: FormData) {
@@ -30,7 +30,6 @@ export async function deleteTestimonial(formData: FormData) {
 
   await prisma.testimonial.delete({ where: { id } });
 
+  revalidatePublicSite();
   revalidatePath("/admin/testimonials");
-  revalidatePath("/testimonials");
-  revalidatePath("/");
 }

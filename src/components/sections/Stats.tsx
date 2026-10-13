@@ -1,14 +1,10 @@
 import Container from "@/components/ui/Container";
 import FadeIn from "@/components/motion/FadeIn";
+import { getDict } from "@/i18n/server";
 
-const stats = [
-  { value: "+۳", label: "سال سابقه مربیگری" },
-  { value: "+۱۲۰", label: "شاگرد فعال و سابق" },
-  { value: "۱۰۰٪", label: "برنامه‌ی اختصاصی و شخصی‌سازی‌شده" },
-  { value: "حضوری و آنلاین", label: "ایرانی های مقیم خارج از کشور" },
-];
+export default async function Stats() {
+  const { stats } = await getDict();
 
-export default function Stats() {
   return (
     <section className="border-y border-red-100 bg-white">
       <Container className="grid grid-cols-2 gap-8 py-12 sm:grid-cols-4">

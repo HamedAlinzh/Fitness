@@ -9,14 +9,22 @@ import GalleryLightbox, {
 } from "@/components/sections/GalleryLightbox";
 import FadeIn from "@/components/motion/FadeIn";
 import { cn } from "@/lib/cn";
+import { getDictionary } from "@/i18n/dictionaries";
+import type { Locale } from "@/i18n/config";
 
-const tabs = [
-  { key: "all", label: "همه" },
-  { key: "IMAGE", label: "تصاویر" },
-  { key: "VIDEO", label: "ویدیوها" },
-] as const;
-
-export default function GalleryGrid({ items }: { items: GalleryItemData[] }) {
+export default function GalleryGrid({
+  items,
+  lang,
+}: {
+  items: GalleryItemData[];
+  lang: Locale;
+}) {
+  const t = getDictionary(lang).gallery;
+  const tabs = [
+    { key: "all", label: t.filterAll },
+    { key: "IMAGE", label: t.filterImages },
+    { key: "VIDEO", label: t.filterVideos },
+  ] as const;
   const [active, setActive] = useState<(typeof tabs)[number]["key"]>("all");
 
   const filtered = active === "all" ? items : items.filter((item) => item.type === active);
@@ -43,7 +51,7 @@ export default function GalleryGrid({ items }: { items: GalleryItemData[] }) {
         </div>
 
         {filtered.length === 0 ? (
-          <p className="text-center text-sm text-ink-500">فعلاً موردی برای نمایش نیست.</p>
+          <p className="text-center text-sm text-ink-500">{t.empty}</p>
         ) : (
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
             {filtered.map((item, index) => (
@@ -51,7 +59,7 @@ export default function GalleryGrid({ items }: { items: GalleryItemData[] }) {
                 {item.url ? (
                   <a
                     href={lightboxHref(item)}
-                    aria-label={`نمایش تمام‌صفحه: ${item.caption}`}
+                    aria-label={t.openFullscreen(item.caption)}
                     className="block rounded-2xl outline-none focus-visible:ring-2 focus-visible:ring-red-500"
                   >
                     <GalleryTile item={item} />
@@ -67,7 +75,7 @@ export default function GalleryGrid({ items }: { items: GalleryItemData[] }) {
 
       {/* Rendered from the full list, not the filtered one, so a link never points at a
           panel that the current tab happened to remove from the page. */}
-      <GalleryLightbox items={items} />
+      <GalleryLightbox items={items} lang={lang} />
     </section>
   );
 }

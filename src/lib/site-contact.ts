@@ -40,3 +40,9 @@ export function formatPhoneForDisplay(nationalPhone: string): string {
 }
 
 export const COACH_PHONE_DISPLAY = formatPhoneForDisplay(COACH_PHONE);
+
+/** The same number written the way an English page shows it: `+98 920 910 2800`. */
+export const COACH_PHONE_DISPLAY_INTL = `+98 ${COACH_PHONE.slice(1, 4)} ${COACH_PHONE.slice(
+  4,
+  7
+)} ${COACH_PHONE.slice(7)}`;

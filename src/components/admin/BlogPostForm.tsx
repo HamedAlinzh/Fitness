@@ -109,7 +109,7 @@ export default function BlogPostForm({ post }: { post?: EditablePost }) {
 
       <form
         action={action}
-        className="flex flex-1 flex-col gap-4 rounded-3xl border border-red-100 bg-white p-6 text-right"
+        className="flex flex-1 flex-col gap-4 rounded-3xl border border-red-100 bg-white p-6 text-start"
       >
         {post && <input type="hidden" name="id" value={post.id} />}
 

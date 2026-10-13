@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { revalidatePublicSite } from "@/lib/revalidate";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/auth/dal";
@@ -19,14 +20,11 @@ export type BlogState = { error?: string; success?: string } | undefined;
  * The homepage preview and the /blog index are statically rendered, and the post page
  * for an existing slug may already be prerendered, so every one of them has to be told.
  */
-function revalidateBlog(...slugs: (string | null | undefined)[]) {
-  revalidatePath("/blog");
-  revalidatePath("/");
+function revalidateBlog() {
+  // `[lang]` is revalidated as a whole, which also covers every post URL — old slug
+  // after a rename included — in both languages.
+  revalidatePublicSite();
   revalidatePath("/admin/blog");
-
-  for (const slug of new Set(slugs.filter(Boolean))) {
-    revalidatePath(`/blog/${slug}`);
-  }
 }
 
 type Parsed = {
@@ -113,7 +111,7 @@ export async function createBlogPost(
     },
   });
 
-  revalidateBlog(slug);
+  revalidateBlog();
   // Straight back to the list, where the new post is now visible.
   redirect("/admin/blog");
 }
@@ -165,7 +163,7 @@ export async function updateBlogPost(
   await deleteUpload(replaced);
 
   // The old slug's page has to be dropped too when the URL changed.
-  revalidateBlog(slug, existing.slug);
+  revalidateBlog();
 
   return {
     success:
@@ -194,7 +192,7 @@ export async function setBlogPostPublished(formData: FormData) {
     },
   });
 
-  revalidateBlog(existing.slug);
+  revalidateBlog();
 }
 
 export async function removeBlogCover(formData: FormData) {
@@ -209,7 +207,7 @@ export async function removeBlogCover(formData: FormData) {
   await prisma.blogPost.update({ where: { id }, data: { coverImage: null } });
   await deleteUpload(existing.coverImage);
 
-  revalidateBlog(existing.slug);
+  revalidateBlog();
   revalidatePath(`/admin/blog/${id}`);
 }
 
@@ -225,6 +223,6 @@ export async function deleteBlogPost(formData: FormData) {
   await prisma.blogPost.delete({ where: { id } });
   await deleteUpload(existing.coverImage);
 
-  revalidateBlog(existing.slug);
+  revalidateBlog();
   redirect("/admin/blog");
 }

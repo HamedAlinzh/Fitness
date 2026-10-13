@@ -16,7 +16,7 @@ export default function SectionHeading({
     <div
       className={cn(
         "flex flex-col gap-4",
-        align === "center" ? "items-center text-center" : "items-start text-right"
+        align === "center" ? "items-center text-center" : "items-start text-start"
       )}
     >
       {eyebrow && <Badge>{eyebrow}</Badge>}

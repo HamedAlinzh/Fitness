@@ -8,12 +8,12 @@ import {
   removeAboutImage,
   type AboutState,
 } from "@/lib/actions/about";
-import { ABOUT_LIMITS, type AboutContent } from "@/lib/about";
+import { ABOUT_LIMITS, type AboutEditable } from "@/lib/about";
 
 const fieldClass =
   "rounded-xl border border-red-100 px-4 py-2.5 text-sm outline-none focus:border-red-400";
 
-export default function AboutContentForm({ about }: { about: AboutContent }) {
+export default function AboutContentForm({ about }: { about: AboutEditable }) {
   const [state, action, pending] = useActionState<AboutState, FormData>(
     updateAboutContent,
     undefined
@@ -51,7 +51,7 @@ export default function AboutContentForm({ about }: { about: AboutContent }) {
 
       <form
         action={action}
-        className="flex flex-1 flex-col gap-4 rounded-3xl border border-red-100 bg-white p-6 text-right"
+        className="flex flex-1 flex-col gap-4 rounded-3xl border border-red-100 bg-white p-6 text-start"
       >
         <div className="flex flex-col gap-1.5">
           <label htmlFor="about-eyebrow" className="text-sm font-medium text-ink-700">
@@ -121,6 +121,76 @@ export default function AboutContentForm({ about }: { about: AboutContent }) {
             برای شروع پاراگراف جدید، یک خط فاصله بگذار.
           </p>
         </div>
+
+        <fieldset className="flex flex-col gap-4 rounded-2xl border border-red-100 bg-red-50/40 p-4">
+          <legend className="px-2 text-sm font-bold text-ink-900">
+            نسخه‌ی انگلیسی (اختیاری)
+          </legend>
+          <p className="text-xs leading-6 text-ink-500">
+            در صفحه‌های انگلیسی سایت (<span dir="ltr">/en</span>) نمایش داده می‌شود. هر
+            فیلدی که خالی بماند، متن فارسی همان فیلد نشان داده می‌شود.
+          </p>
+
+          <div className="flex flex-col gap-1.5">
+            <label htmlFor="about-eyebrow-en" className="text-sm font-medium text-ink-700">
+              Eyebrow
+            </label>
+            <input
+              id="about-eyebrow-en"
+              name="eyebrowEn"
+              type="text"
+              dir="ltr"
+              maxLength={ABOUT_LIMITS.eyebrow}
+              defaultValue={about.eyebrowEn}
+              className={fieldClass}
+            />
+          </div>
+
+          <div className="flex flex-col gap-1.5">
+            <label htmlFor="about-heading-en" className="text-sm font-medium text-ink-700">
+              Heading
+            </label>
+            <input
+              id="about-heading-en"
+              name="headingEn"
+              type="text"
+              dir="ltr"
+              maxLength={ABOUT_LIMITS.heading}
+              defaultValue={about.headingEn}
+              className={fieldClass}
+            />
+          </div>
+
+          <div className="flex flex-col gap-1.5">
+            <label htmlFor="about-preview-en" className="text-sm font-medium text-ink-700">
+              Homepage summary
+            </label>
+            <textarea
+              id="about-preview-en"
+              name="previewTextEn"
+              rows={4}
+              dir="ltr"
+              maxLength={ABOUT_LIMITS.previewText}
+              defaultValue={about.previewTextEn}
+              className={`${fieldClass} resize-y leading-7`}
+            />
+          </div>
+
+          <div className="flex flex-col gap-1.5">
+            <label htmlFor="about-body-en" className="text-sm font-medium text-ink-700">
+              Full about-page text
+            </label>
+            <textarea
+              id="about-body-en"
+              name="bodyTextEn"
+              rows={10}
+              dir="ltr"
+              maxLength={ABOUT_LIMITS.bodyText}
+              defaultValue={about.bodyTextEn}
+              className={`${fieldClass} resize-y leading-7`}
+            />
+          </div>
+        </fieldset>
 
         <div className="flex flex-col gap-1.5">
           <label htmlFor="about-image" className="text-sm font-medium text-ink-700">

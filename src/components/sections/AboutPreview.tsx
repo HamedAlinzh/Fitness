@@ -4,6 +4,8 @@ import Button from "@/components/ui/Button";
 import PlaceholderMedia from "@/components/ui/PlaceholderMedia";
 import FadeIn from "@/components/motion/FadeIn";
 import { getAboutContent } from "@/lib/about-content";
+import { getDict, getLocale } from "@/i18n/server";
+import { localePath } from "@/i18n/config";
 
 /**
  * The homepage teaser for "درباره من". Copy and photo come from the single
@@ -11,7 +13,9 @@ import { getAboutContent } from "@/lib/about-content";
  * from /admin/about.
  */
 export default async function AboutPreview() {
-  const about = await getAboutContent();
+  const lang = await getLocale();
+  const dict = await getDict();
+  const about = await getAboutContent(lang);
 
   return (
     <section className="py-20">
@@ -26,14 +30,14 @@ export default async function AboutPreview() {
           />
         </FadeIn>
 
-        <FadeIn delay={0.15} className="flex flex-col items-start gap-4 text-right">
+        <FadeIn delay={0.15} className="flex flex-col items-start gap-4 text-start">
           <span className="text-sm font-bold text-red-600">{about.eyebrow}</span>
           <h2 className="text-3xl font-extrabold text-ink-900 sm:text-4xl">
             {about.heading}
           </h2>
           <p className="leading-8 text-ink-500">{about.previewText}</p>
-          <Button href="/about" variant="ghost">
-            بیشتر ←
+          <Button href={localePath(lang, "/about")} variant="ghost">
+            {dict.more}
           </Button>
         </FadeIn>
       </Container>

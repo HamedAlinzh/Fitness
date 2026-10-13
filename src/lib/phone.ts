@@ -21,9 +21,26 @@ export function normalizePhone(raw: string): string | null {
 }
 
 /**
+ * Like `normalizePhone`, but also accepts a foreign number written with its country code
+ * (`+44 7700 900123`, `0044…`), which the English site has to allow — its visitors are
+ * often outside Iran. Iranian numbers come back in the national `09xxxxxxxxx` form,
+ * foreign ones as `+<digits>`; `toInternational` understands both.
+ */
+export function normalizeContactPhone(raw: string): string | null {
+  const iranian = normalizePhone(raw);
+  if (iranian) return iranian;
+
+  const digits = toAsciiDigits(raw).replace(/[\s().-]/g, "");
+  const international = digits.replace(/^00/, "+");
+  // E.164 allows at most 15 digits; fewer than 8 is not a real subscriber number.
+  return /^\+[1-9]\d{7,14}$/.test(international) ? international : null;
+}
+
+/**
  * E.164 without the leading `+`, e.g. `989121234567` — the form both wa.me and
  * t.me expect.
  */
-export function toInternational(nationalPhone: string): string {
-  return `98${nationalPhone.slice(1)}`;
+export function toInternational(phone: string): string {
+  if (phone.startsWith("+")) return phone.slice(1);
+  return `98${phone.slice(1)}`;
 }

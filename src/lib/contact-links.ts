@@ -39,6 +39,9 @@ export function smsUrl(nationalPhone: string, message?: string): string {
 }
 
 /** Opening line pre-filled into WhatsApp/Telegram/SMS so the coach doesn't retype it. */
-export function greetingFor(name: string): string {
+export function greetingFor(name: string, locale: string = "fa"): string {
+  if (locale === "en") {
+    return `Hi ${name}, I received your consultation request. How can I help? 🌹`;
+  }
   return `سلام ${name} عزیز، درخواست مشاوره‌ات رو دریافت کردم. در خدمتم 🌹`;
 }

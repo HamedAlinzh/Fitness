@@ -19,6 +19,8 @@ import {
   type Choice,
 } from "@/lib/consultation";
 import { cn } from "@/lib/cn";
+import { getDictionary } from "@/i18n/dictionaries";
+import type { Locale } from "@/i18n/config";
 
 /**
  * Every step stays mounted and is only hidden with CSS, so the browser's own FormData
@@ -32,14 +34,10 @@ import { cn } from "@/lib/cn";
  * actual showing/hiding live next to `[data-wz-step]` in globals.css.
  */
 const steps = [
-  { name: "goal", question: "هدفت از تمرین چیه؟", choices: GOALS },
-  { name: "level", question: "الان در چه سطحی هستی؟", choices: LEVELS },
-  { name: "mode", question: "کدوم نوع مربیگری رو می‌خوای؟", choices: MODES },
-  {
-    name: "daysPerWeek",
-    question: "چند روز در هفته می‌تونی تمرین کنی؟",
-    choices: DAYS_PER_WEEK,
-  },
+  { name: "goal", choices: GOALS },
+  { name: "level", choices: LEVELS },
+  { name: "mode", choices: MODES },
+  { name: "daysPerWeek", choices: DAYS_PER_WEEK },
 ] as const;
 
 const TOTAL_STEPS = steps.length + 2; // + injury step + contact step
@@ -84,7 +82,20 @@ function ChoiceGroup({
   );
 }
 
-export default function ConsultationForm() {
+export default function ConsultationForm({ lang }: { lang: Locale }) {
+  const t = getDictionary(lang).consultation;
+  const rtl = lang === "fa";
+  const numberLocale = rtl ? "fa-IR" : "en-US";
+  // The stored value of every choice is language-independent; only the label comes from
+  // the dictionary (falling back to the Persian label the admin panel uses).
+  const translate = (group: keyof typeof t.choices, choices: readonly Choice[]) =>
+    choices.map((choice) => ({
+      value: choice.value,
+      label: (t.choices[group] as Record<string, string>)[choice.value] ?? choice.label,
+    }));
+  const BackIcon = rtl ? ArrowRight : ArrowLeft;
+  const NextIcon = rtl ? ArrowLeft : ArrowRight;
+
   const [state, action, pending] = useActionState<SubmitLeadState, FormData>(
     submitLead,
     undefined
@@ -115,7 +126,7 @@ export default function ConsultationForm() {
       !formRef.current?.querySelector(`input[name="${field}"]:checked`)
     ) {
       event.preventDefault();
-      setStepError("لطفاً یک گزینه را انتخاب کن.");
+      setStepError(t.pickOne);
       return;
     }
     setStepError(null);
@@ -139,7 +150,7 @@ export default function ConsultationForm() {
     return (
       <div className="flex flex-col items-center gap-3 rounded-3xl border border-red-100 bg-white p-10 text-center">
         <CheckCircle2 className="h-10 w-10 text-red-500" />
-        <h3 className="text-lg font-bold text-ink-900">درخواستت ثبت شد!</h3>
+        <h3 className="text-lg font-bold text-ink-900">{t.successTitle}</h3>
         <p className="text-sm leading-7 text-ink-500">{state.success}</p>
       </div>
     );
@@ -149,7 +160,7 @@ export default function ConsultationForm() {
     <form
       ref={formRef}
       action={action}
-      className="flex scroll-mt-20 flex-col gap-6 rounded-3xl border border-red-100 bg-white p-6 text-right sm:p-8"
+      className="flex scroll-mt-20 flex-col gap-6 rounded-3xl border border-red-100 bg-white p-6 text-start sm:p-8"
     >
       {/*
         The current step. These have to stay direct children of the form and come before
@@ -157,6 +168,7 @@ export default function ConsultationForm() {
         `#wz-N:checked ~ *`. `__step` is submitted along with the answers and ignored by
         the Server Action.
       */}
+      <input type="hidden" name="locale" value={lang} />
       {STEP_INDEXES.map((i) => (
         <input
           key={i}
@@ -175,8 +187,10 @@ export default function ConsultationForm() {
           <span>
             {STEP_INDEXES.map((i) => (
               <span key={i} data-wz-step={i} className="[--wz-display:inline]">
-                مرحله {(i + 1).toLocaleString("fa-IR")} از{" "}
-                {TOTAL_STEPS.toLocaleString("fa-IR")}
+                {t.stepCounter(
+                  (i + 1).toLocaleString(numberLocale),
+                  TOTAL_STEPS.toLocaleString(numberLocale)
+                )}
               </span>
             ))}
           </span>
@@ -184,9 +198,9 @@ export default function ConsultationForm() {
             {STEP_INDEXES.map((i) => (
               <span key={i} data-wz-step={i} className="[--wz-display:inline]">
                 {Math.round(((i + 1) / TOTAL_STEPS) * 100).toLocaleString(
-                  "fa-IR"
+                  numberLocale
                 )}
-                ٪
+                {rtl ? "٪" : "%"}
               </span>
             ))}
           </span>
@@ -208,11 +222,11 @@ export default function ConsultationForm() {
         {steps.map((s, i) => (
           <fieldset key={s.name} data-wz-step={i}>
             <legend className="mb-4 text-base font-bold text-ink-900">
-              {s.question}
+              {t.steps[s.name]}
             </legend>
             <ChoiceGroup
               name={s.name}
-              choices={s.choices}
+              choices={translate(s.name, s.choices)}
               onPick={() => setStepError(null)}
             />
           </fieldset>
@@ -220,12 +234,12 @@ export default function ConsultationForm() {
 
         <fieldset data-wz-step={steps.length}>
           <legend className="mb-4 text-base font-bold text-ink-900">
-            محدودیت پزشکی یا آسیب‌دیدگی داری؟
+            {t.injuryQuestion}
           </legend>
           <div className="wz-injury flex flex-col gap-3">
             {[
-              { value: "no", label: "نه، مشکلی ندارم" },
-              { value: "yes", label: "بله، دارم" },
+              { value: "no", label: t.injuryNo },
+              { value: "yes", label: t.injuryYes },
             ].map((opt) => (
               <label
                 key={opt.value}
@@ -249,7 +263,7 @@ export default function ConsultationForm() {
                 htmlFor="injuryNote"
                 className="text-sm font-medium text-ink-700"
               >
-                کوتاه توضیح بده (اختیاری)
+                {t.injuryNote}
               </label>
               <textarea
                 id="injuryNote"
@@ -259,7 +273,7 @@ export default function ConsultationForm() {
                 className="rounded-xl border border-red-100 px-4 py-2.5 text-sm outline-none focus:border-red-400"
               />
               <span className="text-xs text-ink-500">
-                فقط مربی این اطلاعات را می‌بیند و روی سایت نمایش داده نمی‌شود.
+                {t.injuryPrivacy}
               </span>
             </div>
           </div>
@@ -267,7 +281,7 @@ export default function ConsultationForm() {
 
         <fieldset data-wz-step={LAST_STEP}>
           <legend className="mb-4 text-base font-bold text-ink-900">
-            چطور باهات تماس بگیرم؟
+            {t.contactQuestion}
           </legend>
 
           <div className="flex flex-col gap-4">
@@ -277,7 +291,7 @@ export default function ConsultationForm() {
                   htmlFor="name"
                   className="text-sm font-medium text-ink-700"
                 >
-                  نام و نام خانوادگی
+                  {t.name}
                 </label>
                 <input
                   id="name"
@@ -293,14 +307,15 @@ export default function ConsultationForm() {
                   htmlFor="phone"
                   className="text-sm font-medium text-ink-700"
                 >
-                  شماره موبایل
+                  {t.phone}
                 </label>
                 <input
                   id="phone"
                   name="phone"
                   type="tel"
                   inputMode="tel"
-                  placeholder="۰۹۱۲۳۴۵۶۷۸۹"
+                  placeholder={t.phonePlaceholder}
+                  dir={rtl ? undefined : "ltr"}
                   className="rounded-xl border border-red-100 px-4 py-2.5 text-sm outline-none focus:border-red-400"
                 />
               </div>
@@ -308,10 +323,10 @@ export default function ConsultationForm() {
 
             <div className="flex flex-col gap-2">
               <span className="text-sm font-medium text-ink-700">
-                ترجیح می‌دی از کدوم راه جواب بدم؟
+                {t.channelQuestion}
               </span>
               <div className="flex flex-wrap gap-2">
-                {CHANNELS.map((c) => (
+                {translate("channel", CHANNELS).map((c) => (
                   <label
                     key={c.value}
                     className="flex cursor-pointer items-center gap-2 rounded-full border border-red-100 px-4 py-2 text-sm transition-colors hover:bg-red-50 has-checked:border-red-400 has-checked:bg-red-50"
@@ -334,7 +349,7 @@ export default function ConsultationForm() {
                 htmlFor="telegramUsername"
                 className="text-sm font-medium text-ink-700"
               >
-                آیدی تلگرام (اختیاری)
+                {t.telegram}
               </label>
               <input
                 id="telegramUsername"
@@ -345,7 +360,7 @@ export default function ConsultationForm() {
                 className="rounded-xl border border-red-100 px-4 py-2.5 text-sm outline-none focus:border-red-400"
               />
               <span className="text-xs text-ink-500">
-                اگر در تلگرام با شماره پیدا نمی‌شوی، این را پر کن.
+                {t.telegramHint}
               </span>
             </div>
 
@@ -354,7 +369,7 @@ export default function ConsultationForm() {
                 htmlFor="message"
                 className="text-sm font-medium text-ink-700"
               >
-                چیز دیگه‌ای هست که بدونم؟ (اختیاری)
+                {t.message}
               </label>
               <textarea
                 id="message"
@@ -392,8 +407,8 @@ export default function ConsultationForm() {
             onKeyDown={activateOnKey}
             className={cn(NAV_BACK, i === 0 && "pointer-events-none invisible")}
           >
-            <ArrowRight className="h-4 w-4" />
-            قبلی
+            <BackIcon className="h-4 w-4" />
+            {t.back}
           </label>
         ))}
 
@@ -408,8 +423,8 @@ export default function ConsultationForm() {
             onKeyDown={activateOnKey}
             className={NAV_NEXT}
           >
-            بعدی
-            <ArrowLeft className="h-4 w-4" />
+            {t.next}
+            <NextIcon className="h-4 w-4" />
           </label>
         ))}
 
@@ -420,7 +435,7 @@ export default function ConsultationForm() {
           className="cursor-pointer items-center gap-2 rounded-full bg-red-500 px-6 py-3 text-sm font-bold text-white shadow-lg shadow-red-300/60 transition-colors hover:bg-red-600 disabled:opacity-60 [--wz-display:inline-flex]"
         >
           <Send className="h-4 w-4" />
-          {pending ? "در حال ارسال…" : "ارسال درخواست مشاوره"}
+          {pending ? t.sending : t.submit}
         </button>
       </div>
     </form>

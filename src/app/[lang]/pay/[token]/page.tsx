@@ -26,7 +26,7 @@ export const metadata: Metadata = {
 // served from a cache.
 export const dynamic = "force-dynamic";
 
-export default async function PayPage({ params }: PageProps<"/pay/[token]">) {
+export default async function PayPage({ params }: PageProps<"/[lang]/pay/[token]">) {
   const { token } = await params;
 
   // `customerPhone` is deliberately not selected: this page is public to anyone holding
@@ -50,10 +50,12 @@ export default async function PayPage({ params }: PageProps<"/pay/[token]">) {
 
   const helpMessage = `سلام، درباره پرداخت پلن «${order.package.title}» به مبلغ ${formatRialAsToman(order.amountRial)} سؤال داشتم.`;
 
+  // The invoice page is Persian-only for now; it keeps its own language and direction
+  // inside an English page.
   return (
-    <section className="py-16">
+    <section lang="fa" dir="rtl" className="py-16">
       <Container className="max-w-xl">
-        <div className="flex flex-col gap-6 rounded-3xl border border-red-100 bg-white p-6 text-right sm:p-8">
+        <div className="flex flex-col gap-6 rounded-3xl border border-red-100 bg-white p-6 text-start sm:p-8">
           <div className="flex items-center gap-3">
             <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-red-100 text-red-600">
               <Receipt className="h-5 w-5" strokeWidth={1.75} />

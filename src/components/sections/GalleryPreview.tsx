@@ -4,8 +4,12 @@ import SectionHeading from "@/components/ui/SectionHeading";
 import FadeIn from "@/components/motion/FadeIn";
 import GalleryTile from "@/components/sections/GalleryTile";
 import { prisma } from "@/lib/prisma";
+import { getDict, getLocale } from "@/i18n/server";
+import { localePath } from "@/i18n/config";
 
 export default async function GalleryPreview() {
+  const lang = await getLocale();
+  const { galleryPreview: t } = await getDict();
   const items = await prisma.galleryItem.findMany({
     orderBy: { takenAt: "desc" },
     take: 6,
@@ -17,9 +21,9 @@ export default async function GalleryPreview() {
     <section className="py-20">
       <Container className="flex flex-col gap-12">
         <SectionHeading
-          eyebrow="گالری روزانه"
-          title="یه نگاه به تمرین‌های هر روز"
-          description="عکس و ویدیوی تمرین‌ها و لحظات باشگاه، هر روز به‌روزرسانی می‌شه."
+          eyebrow={t.eyebrow}
+          title={t.title}
+          description={t.description}
         />
 
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-6">
@@ -31,8 +35,8 @@ export default async function GalleryPreview() {
         </div>
 
         <div className="flex justify-center">
-          <Button href="/gallery" variant="secondary">
-            مشاهده گالری کامل ←
+          <Button href={localePath(lang, "/gallery")} variant="secondary">
+            {t.all}
           </Button>
         </div>
       </Container>

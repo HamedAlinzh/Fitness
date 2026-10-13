@@ -123,6 +123,9 @@ const leads = [
 const packages = [
   {
     title: "نیمه‌خصوصی آنلاین — ۱۲ جلسه",
+    titleEn: "Online Semi-Private — 12 sessions",
+    periodLabelEn: "12 sessions",
+    featuresEn: JSON.stringify(["Fully personalised training program", "Video demonstrations of every exercise", "2–3 online sessions in your own training space", "Send videos for review and form corrections"]),
     description:
       "برنامه اختصاصی، فیلم حرکات و جلسات آنلاین در فضای تمرین خودت. مناسب شاگردان داخل و خارج از کشور.",
     priceToman: 3_200_000,
@@ -138,6 +141,9 @@ const packages = [
   },
   {
     title: "نیمه‌خصوصی آنلاین — ۸ جلسه",
+    titleEn: "Online Semi-Private — 8 sessions",
+    periodLabelEn: "8 sessions",
+    featuresEn: JSON.stringify(["Fully personalised training program", "Video demonstrations of every exercise", "2–3 online sessions in your own training space", "Send videos for review and form corrections"]),
     description:
       "همان پلن نیمه‌خصوصی با تعداد جلسات کمتر، برای شروع کوتاه‌تر.",
     priceToman: 2_900_000,
@@ -153,6 +159,9 @@ const packages = [
   },
   {
     title: "پلن VIP آنلاین",
+    titleEn: "Online VIP Plan",
+    periodLabelEn: "12 sessions",
+    featuresEn: JSON.stringify(["All 12 sessions live, on video", "Fully personalised training program", "Video demonstrations of every exercise", "Send videos for review and form corrections"]),
     description:
       "بالاترین سطح همراهی: هر ۱۲ جلسه به‌صورت زنده و تصویری کنار تو تمرین می‌کنیم.",
     priceToman: 5_500_000,
@@ -168,6 +177,9 @@ const packages = [
   },
   {
     title: "کلاس گروهی آنلاین",
+    titleEn: "Online Group Class",
+    periodLabelEn: "12 sessions",
+    featuresEn: JSON.stringify(["Small groups of 2–4 people", "12 live online sessions", "Training program tailored to the group", "Send videos for review and form corrections"]),
     description:
       "گروه‌های ۲ تا ۴ نفره؛ مناسب تمرین با دوست، خواهر و برادر یا هم‌خانه.",
     priceToman: 2_499_000,

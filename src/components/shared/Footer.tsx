@@ -1,19 +1,11 @@
 import Link from "next/link";
 import { AtSign, MessageCircle, Send } from "lucide-react";
 import { INSTAGRAM_PROFILE_URL } from "@/lib/instagram";
-import { SITE_LOGO_MARK, SITE_NAME, SITE_TAGLINE } from "@/lib/brand";
+import { SITE_LOGO_MARK, SITE_NAME } from "@/lib/brand";
 import { COACH_PHONE, COACH_TELEGRAM_USERNAME } from "@/lib/site-contact";
 import { telegramUrl, whatsappUrl } from "@/lib/contact-links";
-
-const quickLinks = [
-  { href: "/about", label: "درباره من" },
-  { href: "/gallery", label: "گالری" },
-  { href: "/pricing", label: "برنامه‌ها" },
-  { href: "/blog", label: "بلاگ" },
-  { href: "/testimonials", label: "نظرات شاگردان" },
-];
-
-const whatsappGreeting = "سلام، از سایت اومدم و می‌خواستم درباره برنامه‌ها بپرسم.";
+import { localePath, type Locale } from "@/i18n/config";
+import { getDictionary } from "@/i18n/dictionaries";
 
 /**
  * Every channel here is an external app link, so they are plain anchors rather than
@@ -29,25 +21,39 @@ const whatsappGreeting = "سلام، از سایت اومدم و می‌خواس
  * as the link's accessible name (plus the hover tooltip) — without it an icon-only link
  * is announced as nothing at all by a screen reader.
  */
-const channels = [
+function channelsFor(lang: Locale) {
+  const t = getDictionary(lang).footer;
+  return [
   {
     href: INSTAGRAM_PROFILE_URL,
-    label: "اینستاگرام",
+    label: t.instagram,
     icon: AtSign,
   },
   {
-    href: whatsappUrl(COACH_PHONE, whatsappGreeting),
-    label: "واتساپ",
+    href: whatsappUrl(COACH_PHONE, t.whatsappGreeting),
+    label: t.whatsapp,
     icon: MessageCircle,
   },
   {
     href: telegramUrl(COACH_PHONE, COACH_TELEGRAM_USERNAME),
-    label: "تلگرام",
+    label: t.telegram,
     icon: Send,
   },
-];
+  ];
+}
 
-export default function Footer() {
+export default function Footer({ lang }: { lang: Locale }) {
+  const dict = getDictionary(lang);
+  const t = dict.footer;
+  const channels = channelsFor(lang);
+  const quickLinks = [
+    { href: "/about", label: dict.nav.about },
+    { href: "/gallery", label: dict.nav.gallery },
+    { href: "/pricing", label: t.plans },
+    { href: "/blog", label: dict.nav.blog },
+    { href: "/testimonials", label: t.testimonials },
+  ];
+
   return (
     <footer className="mt-24 border-t border-red-100 bg-red-50">
       <div className="mx-auto grid max-w-6xl gap-10 px-4 py-12 sm:px-6 md:grid-cols-3">
@@ -59,17 +65,17 @@ export default function Footer() {
             <span dir="ltr">{SITE_NAME}</span>
           </div>
           <p className="mt-3 max-w-xs text-sm leading-6 text-ink-500">
-            {SITE_TAGLINE}
+            {dict.meta.tagline}
           </p>
         </div>
 
         <div>
-          <h3 className="text-sm font-bold text-ink-900">دسترسی سریع</h3>
+          <h3 className="text-sm font-bold text-ink-900">{t.quickLinks}</h3>
           <ul className="mt-4 flex flex-col gap-2">
             {quickLinks.map((link) => (
               <li key={link.href}>
                 <Link
-                  href={link.href}
+                  href={localePath(lang, link.href)}
                   className="text-sm text-ink-500 transition-colors hover:text-red-600"
                 >
                   {link.label}
@@ -80,7 +86,7 @@ export default function Footer() {
         </div>
 
         <div>
-          <h3 className="text-sm font-bold text-ink-900">ارتباط با من</h3>
+          <h3 className="text-sm font-bold text-ink-900">{t.contactMe}</h3>
           <ul className="mt-4 flex flex-wrap gap-3">
             {channels.map((channel) => (
               <li key={channel.label}>
@@ -102,8 +108,7 @@ export default function Footer() {
       </div>
 
       <div className="border-t border-red-100 px-4 py-4 text-center text-xs text-ink-500 sm:px-6">
-        © {new Date().getFullYear()} <span dir="ltr">{SITE_NAME}</span>. تمامی حقوق
-        محفوظ است.
+        © {new Date().getFullYear()} <span dir="ltr">{SITE_NAME}</span>. {t.rights}
       </div>
     </footer>
   );

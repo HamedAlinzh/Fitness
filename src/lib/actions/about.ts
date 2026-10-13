@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { revalidatePublicSite } from "@/lib/revalidate";
 import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/auth/dal";
 import { deleteUpload, saveUpload } from "@/lib/uploads";
@@ -16,8 +17,7 @@ export type AboutState = { error?: string; success?: string } | undefined;
 
 function revalidateAbout() {
   // The homepage preview and the /about page both read this row.
-  revalidatePath("/");
-  revalidatePath("/about");
+  revalidatePublicSite();
   revalidatePath("/admin/about");
 }
 
@@ -50,6 +50,24 @@ export async function updateAboutContent(
     return { error: "یکی از متن‌ها از حد مجاز طولانی‌تر است." };
   }
 
+  // English is optional — blank means "fall back to the Persian text".
+  const english = {
+    eyebrowEn: String(formData.get("eyebrowEn") ?? "").trim(),
+    headingEn: String(formData.get("headingEn") ?? "").trim(),
+    previewTextEn: String(formData.get("previewTextEn") ?? "").trim(),
+    bodyTextEn: String(formData.get("bodyTextEn") ?? "")
+      .replace(/\r\n/g, "\n")
+      .trim(),
+  };
+  if (
+    english.eyebrowEn.length > ABOUT_LIMITS.eyebrow ||
+    english.headingEn.length > ABOUT_LIMITS.heading ||
+    english.previewTextEn.length > ABOUT_LIMITS.previewText ||
+    english.bodyTextEn.length > ABOUT_LIMITS.bodyText
+  ) {
+    return { error: "یکی از متن‌های انگلیسی از حد مجاز طولانی‌تر است." };
+  }
+
   const existing = await prisma.aboutContent.findUnique({
     where: { id: ABOUT_CONTENT_ID },
   });
@@ -66,7 +84,7 @@ export async function updateAboutContent(
     image = saved.url;
   }
 
-  const data = { eyebrow, heading, previewText, bodyText, image };
+  const data = { eyebrow, heading, previewText, bodyText, image, ...english };
 
   await prisma.aboutContent.upsert({
     where: { id: ABOUT_CONTENT_ID },

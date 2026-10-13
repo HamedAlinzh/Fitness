@@ -13,7 +13,7 @@ export type TestimonialData = {
 
 export default function TestimonialCard({ testimonial }: { testimonial: TestimonialData }) {
   return (
-    <Card className="flex h-full flex-col gap-4 text-right">
+    <Card className="flex h-full flex-col gap-4 text-start">
       <Quote className="h-6 w-6 text-red-300" />
       <p className="flex-1 text-sm leading-7 text-ink-500">«{testimonial.content}»</p>
       <div className="flex items-center gap-3">

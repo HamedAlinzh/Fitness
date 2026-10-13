@@ -39,10 +39,13 @@ export function slugify(input: string): string {
 }
 
 /** Roughly how long the post takes to read; also used on the cards. */
-export function readTime(text: string): string {
+export function readMinutes(text: string): number {
   const words = text.trim().split(/\s+/).length;
-  const minutes = Math.max(1, Math.round(words / 120));
-  return `${minutes} دقیقه مطالعه`;
+  return Math.max(1, Math.round(words / 120));
+}
+
+export function readTime(text: string): string {
+  return `${readMinutes(text)} دقیقه مطالعه`;
 }
 
 /**

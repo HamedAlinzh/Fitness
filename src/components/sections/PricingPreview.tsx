@@ -4,8 +4,12 @@ import SectionHeading from "@/components/ui/SectionHeading";
 import FadeIn from "@/components/motion/FadeIn";
 import PricingCard from "@/components/sections/PricingCard";
 import { prisma } from "@/lib/prisma";
+import { getDict, getLocale } from "@/i18n/server";
+import { localePath } from "@/i18n/config";
 
 export default async function PricingPreview() {
+  const lang = await getLocale();
+  const { pricingPreview: t } = await getDict();
   const plans = await prisma.package.findMany({
     orderBy: { priceToman: "asc" },
     take: 3,
@@ -17,9 +21,9 @@ export default async function PricingPreview() {
     <section className="bg-red-50/60 py-20">
       <Container className="flex flex-col gap-12">
         <SectionHeading
-          eyebrow="پلن‌ها و قیمت‌گذاری"
-          title="پلنی که مناسب خودته رو انتخاب کن"
-          description="همه پلن‌ها آنلاین و برای شاگردان داخل و خارج از کشور است؛ اگر مقیم ایران نیستید با من در ارتباط باشید."
+          eyebrow={t.eyebrow}
+          title={t.title}
+          description={t.description}
         />
 
         <div className="grid gap-6 md:grid-cols-3">
@@ -31,8 +35,8 @@ export default async function PricingPreview() {
         </div>
 
         <div className="flex justify-center">
-          <Button href="/pricing" variant="ghost">
-            مشاهده همه پلن‌ها ←
+          <Button href={localePath(lang, "/pricing")} variant="ghost">
+            {t.all}
           </Button>
         </div>
       </Container>

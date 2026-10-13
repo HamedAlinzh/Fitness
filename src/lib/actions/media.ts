@@ -2,6 +2,7 @@
 
 import { randomUUID } from "node:crypto";
 import { revalidatePath } from "next/cache";
+import { revalidatePublicSite } from "@/lib/revalidate";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/auth/dal";
@@ -12,8 +13,7 @@ export type MediaState = { error?: string } | undefined;
 
 function revalidateGallery() {
   revalidatePath("/admin/media");
-  revalidatePath("/gallery");
-  revalidatePath("/");
+  revalidatePublicSite();
 }
 
 /**

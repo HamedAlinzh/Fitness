@@ -56,7 +56,7 @@ export default async function AdminBlogPage() {
               className="aspect-[16/10] w-full shrink-0 rounded-2xl sm:w-40"
             />
 
-            <div className="flex min-w-0 flex-1 flex-col gap-1.5 text-right">
+            <div className="flex min-w-0 flex-1 flex-col gap-1.5 text-start">
               <div className="flex flex-wrap items-center gap-2">
                 <h3 className="font-bold text-ink-900">{post.title}</h3>
                 <span
