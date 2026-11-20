@@ -55,7 +55,7 @@ export default async function PayPage({ params }: PageProps<"/[lang]/pay/[token]
   return (
     <section lang="fa" dir="rtl" className="py-16">
       <Container className="max-w-xl">
-        <div className="flex flex-col gap-6 rounded-3xl border border-red-100 bg-white p-6 text-start sm:p-8">
+        <div className="flex flex-col gap-6 rounded-3xl border border-red-100 bg-surface p-6 text-start sm:p-8">
           <div className="flex items-center gap-3">
             <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-red-100 text-red-600">
               <Receipt className="h-5 w-5" strokeWidth={1.75} />

@@ -30,7 +30,7 @@ export default async function BlogCard({
   return (
     <Link
       href={localePath(lang, `/blog/${post.slug}`)}
-      className="flex h-full flex-col overflow-hidden rounded-3xl border border-red-100 bg-white text-start shadow-sm shadow-red-100/50 transition-shadow hover:shadow-lg hover:shadow-red-200/50"
+      className="flex h-full flex-col overflow-hidden rounded-3xl border border-red-100 bg-surface text-start shadow-sm shadow-red-100/50 transition-shadow hover:shadow-lg hover:shadow-red-200/50"
     >
       <PlaceholderMedia
         icon={icons[variant % icons.length]}

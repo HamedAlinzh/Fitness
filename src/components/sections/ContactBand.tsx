@@ -26,7 +26,7 @@ export default async function ContactBand() {
   return (
     <section className="py-12">
       <Container>
-        <div className="flex flex-col items-center gap-5 rounded-3xl border border-red-100 bg-white p-8 text-center sm:p-10">
+        <div className="flex flex-col items-center gap-5 rounded-3xl border border-red-100 bg-surface p-8 text-center sm:p-10">
           <div className="flex flex-col gap-2">
             <h2 className="text-xl font-extrabold text-ink-900 sm:text-2xl">
               {band.title}

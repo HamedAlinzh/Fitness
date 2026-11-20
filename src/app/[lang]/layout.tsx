@@ -50,7 +50,7 @@ export default async function SiteLayout({
     <html
       lang={lang}
       dir={dirOf(lang)}
-      className={`${vazirmatn.variable} h-full antialiased`}
+      className={`${vazirmatn.variable} theme-dark h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
         <Navbar lang={lang} />

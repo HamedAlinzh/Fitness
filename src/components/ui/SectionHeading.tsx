@@ -1,4 +1,3 @@
-import Badge from "@/components/ui/Badge";
 import { cn } from "@/lib/cn";
 
 export default function SectionHeading({
@@ -19,14 +18,17 @@ export default function SectionHeading({
         align === "center" ? "items-center text-center" : "items-start text-start"
       )}
     >
-      {eyebrow && <Badge>{eyebrow}</Badge>}
-      <h2 className="max-w-2xl text-3xl font-extrabold text-ink-900 sm:text-4xl">
+      {eyebrow && (
+        <span className="inline-flex items-center gap-3 text-sm font-bold text-red-400">
+          <span aria-hidden className="h-px w-8 bg-red-500" />
+          {eyebrow}
+        </span>
+      )}
+      <h2 className="max-w-3xl text-3xl font-black leading-tight tracking-tight text-ink-900 sm:text-5xl">
         {title}
       </h2>
       {description && (
-        <p className={cn("max-w-xl text-base leading-8 text-ink-500")}>
-          {description}
-        </p>
+        <p className="max-w-xl text-base leading-8 text-ink-500">{description}</p>
       )}
     </div>
   );

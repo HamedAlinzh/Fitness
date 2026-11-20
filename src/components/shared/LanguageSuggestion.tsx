@@ -45,7 +45,7 @@ export default function LanguageSuggestion() {
       lang="en"
       role="region"
       aria-label="Language"
-      className="fixed inset-x-3 bottom-3 z-50 mx-auto flex max-w-md items-center justify-between gap-3 rounded-2xl border border-red-100 bg-white px-4 py-3 text-sm text-ink-700 shadow-lg shadow-red-200/50"
+      className="fixed inset-x-3 bottom-3 z-50 mx-auto flex max-w-md items-center justify-between gap-3 rounded-2xl border border-red-100 bg-surface px-4 py-3 text-sm text-ink-700 shadow-lg shadow-red-200/50"
     >
       <span>{text.text}</span>
       <span className="flex items-center gap-2">

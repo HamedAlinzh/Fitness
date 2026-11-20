@@ -6,15 +6,15 @@ type Variant = "primary" | "secondary" | "ghost" | "light";
 
 const variantClasses: Record<Variant, string> = {
   primary:
-    "bg-red-500 text-white shadow-lg shadow-red-300/60 hover:bg-red-600",
+    "bg-red-500 text-background shadow-lg shadow-red-500/30 hover:bg-red-400 hover:shadow-red-500/50",
   secondary:
-    "border border-red-200 text-red-600 hover:bg-red-50",
-  ghost: "text-red-600 hover:bg-red-50",
-  light: "bg-white text-red-600 hover:bg-red-50",
+    "border border-white/15 text-ink-900 hover:border-red-400 hover:text-red-400",
+  ghost: "text-red-400 hover:bg-red-500/10",
+  light: "bg-white text-red-700 hover:bg-white/90",
 };
 
 const baseClasses =
-  "inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-bold transition-colors";
+  "inline-flex items-center justify-center gap-2 rounded-full px-7 py-3.5 text-sm font-bold transition-all active:scale-[0.98]";
 
 export default function Button({
   href,

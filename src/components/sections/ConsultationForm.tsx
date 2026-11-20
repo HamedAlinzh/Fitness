@@ -148,7 +148,7 @@ export default function ConsultationForm({ lang }: { lang: Locale }) {
 
   if (state?.success) {
     return (
-      <div className="flex flex-col items-center gap-3 rounded-3xl border border-red-100 bg-white p-10 text-center">
+      <div className="flex flex-col items-center gap-3 rounded-3xl border border-red-100 bg-surface p-10 text-center">
         <CheckCircle2 className="h-10 w-10 text-red-500" />
         <h3 className="text-lg font-bold text-ink-900">{t.successTitle}</h3>
         <p className="text-sm leading-7 text-ink-500">{state.success}</p>
@@ -160,7 +160,7 @@ export default function ConsultationForm({ lang }: { lang: Locale }) {
     <form
       ref={formRef}
       action={action}
-      className="flex scroll-mt-20 flex-col gap-6 rounded-3xl border border-red-100 bg-white p-6 text-start sm:p-8"
+      className="flex scroll-mt-20 flex-col gap-6 rounded-3xl border border-red-100 bg-surface p-6 text-start sm:p-8"
     >
       {/*
         The current step. These have to stay direct children of the form and come before

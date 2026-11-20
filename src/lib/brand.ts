@@ -35,3 +35,10 @@ export const SITE_TAGLINE =
 export function pageTitle(page: string): string {
   return `${page} | ${SITE_NAME}`;
 }
+
+/**
+ * The coach's photo in the homepage hero. `null` renders the gradient placeholder;
+ * set it to a file under `public/` (e.g. "/hero.jpg") once the photo is chosen. A tall
+ * portrait (about 4:5) suits the frame best.
+ */
+export const HERO_IMAGE_SRC: string | null = null;

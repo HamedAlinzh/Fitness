@@ -72,7 +72,7 @@ export default async function AboutPage() {
             const Icon = reasonIcons[index];
             return (
               <FadeIn key={reason.title} delay={index * 0.1}>
-                <div className="flex items-start gap-4 rounded-3xl border border-red-100 bg-white p-6 text-start">
+                <div className="flex items-start gap-4 rounded-3xl border border-red-100 bg-surface p-6 text-start">
                   <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-red-100 text-red-600">
                     <Icon className="h-6 w-6" strokeWidth={1.75} />
                   </span>
