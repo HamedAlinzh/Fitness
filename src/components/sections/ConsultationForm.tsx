@@ -48,9 +48,31 @@ const LAST_STEP = TOTAL_STEPS - 1;
 const stepId = (i: number) => `wz-${i}`;
 
 const NAV_NEXT =
-  "cursor-pointer select-none items-center gap-2 rounded-full bg-red-500 px-6 py-3 text-sm font-bold text-background shadow-lg shadow-red-500/30 transition-colors hover:bg-red-400 [--wz-display:inline-flex]";
+  "cursor-pointer select-none items-center gap-2 rounded-full bg-red-500 px-7 py-3.5 text-sm font-bold text-background shadow-lg shadow-red-500/30 transition-colors hover:bg-red-400 [--wz-display:inline-flex]";
 const NAV_BACK =
-  "cursor-pointer select-none items-center gap-2 rounded-full px-4 py-2.5 text-sm font-semibold text-ink-500 transition-colors hover:bg-red-50 hover:text-red-600 [--wz-display:inline-flex]";
+  "cursor-pointer select-none items-center gap-2 rounded-full px-4 py-2.5 text-sm font-semibold text-ink-500 transition-colors hover:text-red-400 [--wz-display:inline-flex]";
+
+const INPUT =
+  "rounded-xl border border-white/10 bg-background px-4 py-3 text-sm text-ink-900 outline-none transition placeholder:text-ink-500/60 focus:border-red-500 focus:ring-2 focus:ring-red-500/20";
+
+/**
+ * A tappable answer card. The native radio stays in the DOM (visually hidden, still
+ * focusable and still what FormData reads); the card and its indicator are styled off
+ * `has-checked` / `has-focus-visible`, so no React state is involved in showing the pick.
+ */
+const OPTION_CARD =
+  "group relative flex cursor-pointer items-center gap-3 rounded-2xl border border-white/10 bg-background px-4 py-4 text-sm font-semibold text-ink-700 transition-all hover:border-red-500/50 has-checked:border-red-500 has-checked:bg-red-500/10 has-checked:text-ink-900 has-focus-visible:ring-2 has-focus-visible:ring-red-500/50";
+
+function OptionIndicator() {
+  return (
+    <span
+      aria-hidden
+      className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 border-white/20 transition-colors group-has-checked:border-red-500 group-has-checked:bg-red-500"
+    >
+      <span className="h-1.5 w-1.5 rounded-full bg-background opacity-0 transition-opacity group-has-checked:opacity-100" />
+    </span>
+  );
+}
 
 function ChoiceGroup({
   name,
@@ -62,20 +84,18 @@ function ChoiceGroup({
   onPick?: () => void;
 }) {
   return (
-    <div className="flex flex-col gap-3">
+    <div className="grid gap-3 sm:grid-cols-2">
       {choices.map((choice) => (
-        <label
-          key={choice.value}
-          className="group flex cursor-pointer items-center gap-3 rounded-2xl border border-red-100 px-4 py-3 text-sm transition-colors hover:bg-red-50 has-checked:border-red-400 has-checked:bg-red-50"
-        >
+        <label key={choice.value} className={OPTION_CARD}>
           <input
             type="radio"
             name={name}
             value={choice.value}
             onChange={onPick}
-            className="h-4 w-4 shrink-0 accent-red-500"
+            className="sr-only"
           />
-          <span className="text-ink-700">{choice.label}</span>
+          <OptionIndicator />
+          <span>{choice.label}</span>
         </label>
       ))}
     </div>
@@ -148,9 +168,11 @@ export default function ConsultationForm({ lang }: { lang: Locale }) {
 
   if (state?.success) {
     return (
-      <div className="flex flex-col items-center gap-3 rounded-3xl border border-red-100 bg-surface p-10 text-center">
-        <CheckCircle2 className="h-10 w-10 text-red-500" />
-        <h3 className="text-lg font-bold text-ink-900">{t.successTitle}</h3>
+      <div className="flex flex-col items-center gap-4 rounded-[2rem] border border-red-500/30 bg-gradient-to-b from-red-900/30 to-surface p-12 text-center">
+        <span className="flex h-16 w-16 items-center justify-center rounded-full bg-red-500 text-background shadow-lg shadow-red-500/40">
+          <CheckCircle2 className="h-8 w-8" />
+        </span>
+        <h3 className="text-2xl font-black text-ink-900">{t.successTitle}</h3>
         <p className="text-sm leading-7 text-ink-500">{state.success}</p>
       </div>
     );
@@ -160,7 +182,7 @@ export default function ConsultationForm({ lang }: { lang: Locale }) {
     <form
       ref={formRef}
       action={action}
-      className="flex scroll-mt-20 flex-col gap-6 rounded-3xl border border-red-100 bg-surface p-6 text-start sm:p-8"
+      className="flex scroll-mt-24 flex-col gap-8 rounded-[2rem] border border-white/[0.06] bg-surface p-6 text-start shadow-2xl shadow-black/40 sm:p-10"
     >
       {/*
         The current step. These have to stay direct children of the form and come before
@@ -182,8 +204,8 @@ export default function ConsultationForm({ lang }: { lang: Locale }) {
         />
       ))}
 
-      <div className="flex flex-col gap-2">
-        <div className="flex items-center justify-between text-xs text-ink-500">
+      <div className="flex flex-col gap-3">
+        <div className="flex items-center justify-between text-xs font-semibold text-ink-500">
           <span>
             {STEP_INDEXES.map((i) => (
               <span key={i} data-wz-step={i} className="[--wz-display:inline]">
@@ -194,7 +216,7 @@ export default function ConsultationForm({ lang }: { lang: Locale }) {
               </span>
             ))}
           </span>
-          <span>
+          <span className="text-red-400">
             {STEP_INDEXES.map((i) => (
               <span key={i} data-wz-step={i} className="[--wz-display:inline]">
                 {Math.round(((i + 1) / TOTAL_STEPS) * 100).toLocaleString(
@@ -205,10 +227,10 @@ export default function ConsultationForm({ lang }: { lang: Locale }) {
             ))}
           </span>
         </div>
-        <div className="h-1.5 overflow-hidden rounded-full bg-red-100">
+        <div className="h-2 overflow-hidden rounded-full bg-white/5">
           <div
             data-wz-bar
-            className="h-full rounded-full bg-red-500 transition-[width] duration-300"
+            className="h-full rounded-full bg-gradient-to-r from-red-600 to-red-400 shadow-[0_0_12px] shadow-red-500/60 transition-[width] duration-500 rtl:bg-gradient-to-l"
           />
         </div>
       </div>
@@ -216,12 +238,13 @@ export default function ConsultationForm({ lang }: { lang: Locale }) {
       {/*
         min-height keeps the question area a constant size across the quiz steps, which
         are 2–4 options tall. Without it the nav buttons jump vertically on every step.
+        From `sm` the options sit two per row, so the quiz steps are shorter there.
         The error message lives in here too, so showing it doesn't push the nav down.
       */}
-      <div className="flex min-h-80 flex-col gap-6">
+      <div className="flex min-h-80 flex-col gap-6 sm:min-h-72">
         {steps.map((s, i) => (
           <fieldset key={s.name} data-wz-step={i}>
-            <legend className="mb-4 text-base font-bold text-ink-900">
+            <legend className="mb-5 text-xl font-black text-ink-900 sm:text-2xl">
               {t.steps[s.name]}
             </legend>
             <ChoiceGroup
@@ -233,7 +256,7 @@ export default function ConsultationForm({ lang }: { lang: Locale }) {
         ))}
 
         <fieldset data-wz-step={steps.length}>
-          <legend className="mb-4 text-base font-bold text-ink-900">
+          <legend className="mb-5 text-xl font-black text-ink-900 sm:text-2xl">
             {t.injuryQuestion}
           </legend>
           <div className="wz-injury flex flex-col gap-3">
@@ -241,19 +264,17 @@ export default function ConsultationForm({ lang }: { lang: Locale }) {
               { value: "no", label: t.injuryNo },
               { value: "yes", label: t.injuryYes },
             ].map((opt) => (
-              <label
-                key={opt.value}
-                className="flex cursor-pointer items-center gap-3 rounded-2xl border border-red-100 px-4 py-3 text-sm transition-colors hover:bg-red-50 has-checked:border-red-400 has-checked:bg-red-50"
-              >
+              <label key={opt.value} className={OPTION_CARD}>
                 <input
                   type="radio"
                   name="hasInjury"
                   id={`wz-injury-${opt.value}`}
                   value={opt.value}
                   defaultChecked={opt.value === "no"}
-                  className="h-4 w-4 shrink-0 accent-red-500"
+                  className="sr-only"
                 />
-                <span className="text-ink-700">{opt.label}</span>
+                <OptionIndicator />
+                <span>{opt.label}</span>
               </label>
             ))}
 
@@ -270,7 +291,7 @@ export default function ConsultationForm({ lang }: { lang: Locale }) {
                 name="injuryNote"
                 rows={3}
                 maxLength={300}
-                className="rounded-xl border border-red-100 px-4 py-2.5 text-sm outline-none focus:border-red-400"
+                className={INPUT}
               />
               <span className="text-xs text-ink-500">
                 {t.injuryPrivacy}
@@ -280,7 +301,7 @@ export default function ConsultationForm({ lang }: { lang: Locale }) {
         </fieldset>
 
         <fieldset data-wz-step={LAST_STEP}>
-          <legend className="mb-4 text-base font-bold text-ink-900">
+          <legend className="mb-5 text-xl font-black text-ink-900 sm:text-2xl">
             {t.contactQuestion}
           </legend>
 
@@ -298,7 +319,7 @@ export default function ConsultationForm({ lang }: { lang: Locale }) {
                   name="name"
                   type="text"
                   maxLength={50}
-                  className="rounded-xl border border-red-100 px-4 py-2.5 text-sm outline-none focus:border-red-400"
+                  className={INPUT}
                 />
               </div>
 
@@ -316,7 +337,7 @@ export default function ConsultationForm({ lang }: { lang: Locale }) {
                   inputMode="tel"
                   placeholder={t.phonePlaceholder}
                   dir={rtl ? undefined : "ltr"}
-                  className="rounded-xl border border-red-100 px-4 py-2.5 text-sm outline-none focus:border-red-400"
+                  className={INPUT}
                 />
               </div>
             </div>
@@ -329,16 +350,16 @@ export default function ConsultationForm({ lang }: { lang: Locale }) {
                 {translate("channel", CHANNELS).map((c) => (
                   <label
                     key={c.value}
-                    className="flex cursor-pointer items-center gap-2 rounded-full border border-red-100 px-4 py-2 text-sm transition-colors hover:bg-red-50 has-checked:border-red-400 has-checked:bg-red-50"
+                    className="cursor-pointer rounded-full border border-white/10 bg-background px-4 py-2 text-sm font-semibold text-ink-700 transition-all hover:border-red-500/50 has-checked:border-red-500 has-checked:bg-red-500 has-checked:text-background has-focus-visible:ring-2 has-focus-visible:ring-red-500/50"
                   >
                     <input
                       type="radio"
                       name="preferredChannel"
                       value={c.value}
                       defaultChecked={c.value === "whatsapp"}
-                      className="h-3.5 w-3.5 accent-red-500"
+                      className="sr-only"
                     />
-                    <span className="text-ink-700">{c.label}</span>
+                    <span>{c.label}</span>
                   </label>
                 ))}
               </div>
@@ -357,7 +378,7 @@ export default function ConsultationForm({ lang }: { lang: Locale }) {
                 type="text"
                 dir="ltr"
                 placeholder="my_username@"
-                className="rounded-xl border border-red-100 px-4 py-2.5 text-sm outline-none focus:border-red-400"
+                className={INPUT}
               />
               <span className="text-xs text-ink-500">
                 {t.telegramHint}
@@ -376,14 +397,14 @@ export default function ConsultationForm({ lang }: { lang: Locale }) {
                 name="message"
                 rows={3}
                 maxLength={1000}
-                className="rounded-xl border border-red-100 px-4 py-2.5 text-sm outline-none focus:border-red-400"
+                className={INPUT}
               />
             </div>
           </div>
         </fieldset>
 
         {(stepError || state?.error) && (
-          <p className="flex items-center gap-2 rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700">
+          <p role="alert" className="flex items-center gap-2 rounded-xl border border-red-500/40 bg-red-500/10 px-4 py-3 text-sm font-semibold text-red-300">
             <AlertCircle className="h-4 w-4 shrink-0" />
             {stepError ?? state?.error}
           </p>
@@ -432,7 +453,7 @@ export default function ConsultationForm({ lang }: { lang: Locale }) {
           data-wz-step={LAST_STEP}
           type="submit"
           disabled={pending}
-          className="cursor-pointer items-center gap-2 rounded-full bg-red-500 px-6 py-3 text-sm font-bold text-background shadow-lg shadow-red-500/30 transition-colors hover:bg-red-400 disabled:opacity-60 [--wz-display:inline-flex]"
+          className="cursor-pointer items-center gap-2 rounded-full bg-red-500 px-7 py-3.5 text-sm font-bold text-background shadow-lg shadow-red-500/30 transition-colors hover:bg-red-400 disabled:opacity-60 [--wz-display:inline-flex]"
         >
           <Send className="h-4 w-4" />
           {pending ? t.sending : t.submit}
