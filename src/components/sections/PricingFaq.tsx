@@ -14,7 +14,7 @@ export default async function PricingFaq() {
         <div className="mx-auto flex w-full max-w-2xl flex-col gap-4">
           {faq.items.map((faq, index) => (
             <FadeIn key={faq.question} delay={index * 0.1}>
-              <div className="rounded-2xl border border-red-100 bg-white p-6 text-start">
+              <div className="rounded-2xl border border-red-100 bg-surface p-6 text-start">
                 <h3 className="text-sm font-bold text-ink-900">{faq.question}</h3>
                 <p className="mt-2 text-sm leading-7 text-ink-500">{faq.answer}</p>
               </div>

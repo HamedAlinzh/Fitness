@@ -20,9 +20,43 @@
   --color-ink-500: #6b4a47;
   --color-ink-700: #402a28;
   --color-ink-900: #211110;
+
+  --color-surface: #ffffff;
+  --color-surface-2: #fff8fc;
+}
+
+/*
+  The public site is dark; the admin panel stays light. Rather than restyling every
+  component twice, the public layout puts `theme-dark` on <html> and the tokens are
+  re-pointed here: `ink-*` flips to light text, and the pale tints of the pink scale
+  (50–200), which components use as backgrounds and borders, become dark pink-tinted
+  surfaces. 300–900 stay as they are — they're the accent. Cards use `bg-surface`, never
+  `bg-white`, so they follow the theme.
+*/
+.theme-dark {
+  color-scheme: dark;
+
+  --background: #0a0709;
+  --foreground: #f6eef2;
+
+  --color-red-50: #170d13;
+  --color-red-100: #2a1422;
+  --color-red-200: #4a1c3a;
+
+  --color-ink-50: #1a1217;
+  --color-ink-100: #2c2028;
+  --color-ink-500: #a8949f;
+  --color-ink-700: #d6c6cf;
+  --color-ink-900: #fbf5f8;
+
+  --color-surface: #130d11;
+  --color-surface-2: #1b1218;
 }
 
 @theme inline {
+  --color-surface: var(--color-surface);
+  --color-surface-2: var(--color-surface-2);
+
   --color-background: var(--background);
   --color-foreground: var(--foreground);
 
@@ -112,4 +146,58 @@ body {
 [data-lightbox]:target {
   display: flex;
   overscroll-behavior: contain;
+}
+
+/* ---------------------------------------------------------------------------
+  Redesign helpers (public site).
+--------------------------------------------------------------------------- */
+
+/* Faint grid behind hero and page headers, fading out towards the edges. */
+.bg-grid {
+  background-image:
+    linear-gradient(to right, rgb(255 255 255 / 0.045) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(255 255 255 / 0.045) 1px, transparent 1px);
+  background-size: 56px 56px;
+  mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%);
+}
+
+/* Hollow display type for the oversized background wordmarks. */
+.text-outline {
+  color: transparent;
+  -webkit-text-stroke: 1px rgb(254 93 159 / 0.28);
+}
+
+/* Diagonal stripes for the pink CTA band. */
+.bg-stripes {
+  background-image: repeating-linear-gradient(
+    -45deg,
+    rgb(255 255 255 / 0.07) 0 2px,
+    transparent 2px 22px
+  );
+}
+
+/*
+  Scroll reveal, CSS only. Content never depends on this: browsers without
+  scroll-driven animations skip the whole block, and the starting opacity is not zero,
+  so even a stalled timeline leaves text readable (see the FadeIn note in CLAUDE.md).
+*/
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .reveal {
+      animation: reveal-up linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 60%;
+    }
+  }
+}
+
+@keyframes reveal-up {
+  from {
+    opacity: 0.35;
+    transform: translateY(28px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }

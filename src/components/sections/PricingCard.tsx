@@ -23,31 +23,34 @@ export default async function PricingCard({ plan: raw }: { plan: PackageData }) 
     <Card
       className={cn(
         "flex h-full flex-col gap-6 text-start",
-        plan.highlighted && "border-red-400 ring-2 ring-red-300"
+        plan.highlighted &&
+          "relative border-red-500/70 bg-gradient-to-b from-red-900/40 to-surface shadow-2xl shadow-red-500/20 xl:-my-4 xl:py-10"
       )}
     >
       {plan.highlighted && (
-        <span className="w-fit rounded-full bg-red-500 px-3 py-1 text-xs font-bold text-white">
+        <span className="w-fit rounded-full bg-red-500 px-3 py-1 text-xs font-bold text-background">
           {t.recommended}
         </span>
       )}
       <div>
         <h3 className="text-lg font-bold text-ink-900">{plan.title}</h3>
-        <div className="mt-2 flex flex-wrap items-baseline gap-x-2">
-          <span className="text-2xl font-extrabold text-red-600">
+        <div className="mt-4 flex flex-wrap items-baseline gap-x-2">
+          <span className="text-4xl font-black tracking-tight text-ink-900">
             {plan.priceToman.toLocaleString(lang === "fa" ? "fa-IR" : "en-US")}
           </span>
           <span className="text-sm text-ink-500">{t.currency}</span>
           <span className="text-sm text-ink-500">/ {plan.periodLabel}</span>
         </div>
       </div>
-      <ul className="flex flex-col gap-2">
+      <ul className="flex flex-col gap-3 border-t border-white/[0.06] pt-6">
         {features.map((feature) => (
           <li
             key={feature}
-            className="flex items-center gap-2 text-sm text-ink-500"
+            className="flex items-center gap-3 text-sm text-ink-700"
           >
-            <Check className="h-4 w-4 shrink-0 text-red-500" />
+            <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-red-500/15 text-red-400">
+              <Check className="h-3 w-3" strokeWidth={3} />
+            </span>
             {feature}
           </li>
         ))}
@@ -61,8 +64,8 @@ export default async function PricingCard({ plan: raw }: { plan: PackageData }) 
           className={cn(
             "inline-flex w-full items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-bold transition-colors",
             plan.highlighted
-              ? "bg-red-500 text-white shadow-lg shadow-red-300/60 hover:bg-red-600"
-              : "border border-red-200 text-red-600 hover:bg-red-50"
+              ? "bg-red-500 text-background shadow-lg shadow-red-500/30 hover:bg-red-400"
+              : "border border-white/15 text-ink-900 hover:border-red-400 hover:text-red-400"
           )}
         >
           <MessageCircle className="h-4 w-4" />
@@ -70,7 +73,7 @@ export default async function PricingCard({ plan: raw }: { plan: PackageData }) 
         </a>
         <a
           href={telUrl(COACH_PHONE)}
-          className="inline-flex w-full items-center justify-center gap-2 rounded-full px-6 py-2.5 text-sm font-semibold text-ink-500 transition-colors hover:bg-red-50 hover:text-red-600"
+          className="inline-flex w-full items-center justify-center gap-2 rounded-full px-6 py-2.5 text-sm font-semibold text-ink-500 transition-colors hover:text-red-400"
         >
           <Phone className="h-4 w-4" />
           {t.call}

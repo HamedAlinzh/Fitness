@@ -46,7 +46,7 @@ export default function Navbar({ lang }: { lang: Locale }) {
     <div
       role="group"
       aria-label={nav.switchLabel}
-      className="inline-flex items-center rounded-full border border-red-200 bg-red-50/60 p-0.5 text-xs font-bold"
+      className="inline-flex items-center rounded-full border border-white/10 bg-surface p-0.5 text-xs font-bold"
     >
       {options.map((option) =>
         option.code === lang ? (
@@ -55,7 +55,7 @@ export default function Navbar({ lang }: { lang: Locale }) {
             lang={option.code}
             aria-current="true"
             title={option.name}
-            className="rounded-full bg-red-500 px-3 py-1 text-white shadow-sm"
+            className="rounded-full bg-red-500 px-3 py-1 text-background shadow-sm"
           >
             {option.label}
           </span>
@@ -68,7 +68,7 @@ export default function Navbar({ lang }: { lang: Locale }) {
             title={option.name}
             aria-label={option.name}
             onClick={() => rememberLocale(option.code)}
-            className="rounded-full px-3 py-1 text-red-600 transition-colors hover:bg-red-100"
+            className="rounded-full px-3 py-1 text-ink-700 transition-colors hover:text-red-400"
           >
             {option.label}
           </a>
@@ -91,9 +91,9 @@ export default function Navbar({ lang }: { lang: Locale }) {
   };
 
   return (
-    <header className="sticky top-0 z-50 border-b border-red-100 bg-white">
+    <header className="sticky top-0 z-50 border-b border-white/5 bg-background/80 backdrop-blur-md">
       <nav className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 sm:px-6">
-        <Link href={localePath(lang, "/")} className="flex items-center gap-2 text-lg font-extrabold text-red-600">
+        <Link href={localePath(lang, "/")} className="flex items-center gap-2 text-lg font-black tracking-tight text-ink-900">
           {/* Decorative: the brand name follows as text in the same link, so an alt
               text here would only make a screen reader announce it twice. */}
           <Image
@@ -117,7 +117,7 @@ export default function Navbar({ lang }: { lang: Locale }) {
             <li key={link.href}>
               <Link
                 href={localePath(lang, link.href)}
-                className="text-sm font-medium text-ink-700 transition-colors hover:text-red-600"
+                className="text-sm font-medium text-ink-700 transition-colors hover:text-red-400"
               >
                 {link.label}
               </Link>
@@ -129,7 +129,7 @@ export default function Navbar({ lang }: { lang: Locale }) {
         {switcher}
         <Link
           href={localePath(lang, "/contact")}
-          className="rounded-full bg-red-500 px-5 py-2 text-sm font-bold text-white shadow-sm shadow-red-300 transition-colors hover:bg-red-600"
+          className="rounded-full bg-red-500 px-5 py-2 text-sm font-bold text-background shadow-lg shadow-red-500/30 transition hover:bg-red-400"
         >
           {nav.cta}
         </Link>
@@ -151,7 +151,7 @@ export default function Navbar({ lang }: { lang: Locale }) {
             </span>
           </summary>
 
-          <div className="absolute inset-x-0 top-full border-t border-red-100 bg-white px-4 pb-4 shadow-lg shadow-red-100/60">
+          <div className="absolute inset-x-0 top-full border-t border-white/5 bg-surface px-4 pb-4 shadow-2xl shadow-black/60">
             <ul className="flex flex-col gap-1 pt-2">
               {navLinks.map((link) => (
                 <li key={link.href}>
@@ -168,7 +168,7 @@ export default function Navbar({ lang }: { lang: Locale }) {
             <Link
               href={localePath(lang, "/contact")}
               onClick={closeMenu}
-              className="mt-3 block rounded-full bg-red-500 px-5 py-2 text-center text-sm font-bold text-white hover:bg-red-600"
+              className="mt-3 block rounded-full bg-red-500 px-5 py-2 text-center text-sm font-bold text-background hover:bg-red-400"
             >
               {nav.cta}
             </Link>

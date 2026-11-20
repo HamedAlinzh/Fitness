@@ -17,7 +17,7 @@ export default function GalleryTile({ item }: { item: GalleryItemData }) {
   const isVideo = isVideoItem(item);
 
   return (
-    <div className="group relative aspect-square overflow-hidden rounded-2xl bg-ink-100">
+    <div className="group relative aspect-square overflow-hidden rounded-3xl border border-white/[0.06] bg-surface-2 transition-colors hover:border-red-500/50">
       {isVideo && item.url ? (
         <video
           /**
@@ -44,7 +44,7 @@ export default function GalleryTile({ item }: { item: GalleryItemData }) {
       )}
 
       {isVideo && (
-        <span className="absolute top-3 left-3 flex h-8 w-8 items-center justify-center rounded-full bg-black/30 text-white backdrop-blur-sm">
+        <span className="absolute top-3 left-3 flex h-8 w-8 items-center justify-center rounded-full bg-red-500 text-background shadow-lg shadow-red-500/40">
           <Play className="h-4 w-4 fill-current" />
         </span>
       )}

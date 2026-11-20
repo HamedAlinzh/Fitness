@@ -13,10 +13,15 @@ export type TestimonialData = {
 
 export default function TestimonialCard({ testimonial }: { testimonial: TestimonialData }) {
   return (
-    <Card className="flex h-full flex-col gap-4 text-start">
-      <Quote className="h-6 w-6 text-red-300" />
-      <p className="flex-1 text-sm leading-7 text-ink-500">«{testimonial.content}»</p>
-      <div className="flex items-center gap-3">
+    <Card className="relative flex h-full flex-col gap-5 overflow-hidden text-start">
+      <Quote aria-hidden className="absolute top-4 end-5 h-10 w-10 fill-red-500/15 text-transparent" />
+      <div className="flex gap-0.5 text-red-400">
+        {Array.from({ length: testimonial.rating }).map((_, i) => (
+          <Star key={i} className="h-4 w-4 fill-current" />
+        ))}
+      </div>
+      <p className="relative flex-1 text-base leading-8 text-ink-700">«{testimonial.content}»</p>
+      <div className="flex items-center gap-3 border-t border-white/[0.06] pt-4">
         <PlaceholderMedia
           icon={Star}
           variant={hashVariant(testimonial.id)}
@@ -26,11 +31,6 @@ export default function TestimonialCard({ testimonial }: { testimonial: Testimon
         />
         <div>
           <div className="text-sm font-bold text-ink-900">{testimonial.studentName}</div>
-          <div className="flex gap-0.5 text-red-400">
-            {Array.from({ length: testimonial.rating }).map((_, i) => (
-              <Star key={i} className="h-3.5 w-3.5 fill-current" />
-            ))}
-          </div>
         </div>
       </div>
     </Card>

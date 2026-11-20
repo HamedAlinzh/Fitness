@@ -30,17 +30,17 @@ export default async function BlogCard({
   return (
     <Link
       href={localePath(lang, `/blog/${post.slug}`)}
-      className="flex h-full flex-col overflow-hidden rounded-3xl border border-red-100 bg-white text-start shadow-sm shadow-red-100/50 transition-shadow hover:shadow-lg hover:shadow-red-200/50"
+      className="group flex h-full flex-col overflow-hidden rounded-3xl border border-white/[0.06] bg-surface text-start transition-all duration-300 hover:-translate-y-1 hover:border-red-500/40"
     >
       <PlaceholderMedia
         icon={icons[variant % icons.length]}
         variant={variant}
         src={post.coverImage}
         alt={post.title}
-        className="aspect-[16/10] w-full"
+        className="aspect-[16/10] w-full transition-transform duration-500 group-hover:scale-105"
       />
-      <div className="flex flex-1 flex-col gap-2 p-6">
-        <h3 className="text-base font-bold text-ink-900">{post.title}</h3>
+      <div className="relative flex flex-1 flex-col gap-2 bg-surface p-6">
+        <h3 className="text-lg font-bold leading-8 text-ink-900 transition-colors group-hover:text-red-300">{post.title}</h3>
         <p className="flex-1 text-sm leading-7 text-ink-500">{post.excerpt}</p>
         <span className="flex items-center gap-1 text-xs text-ink-500">
           <Clock className="h-3.5 w-3.5" />

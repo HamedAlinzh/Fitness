@@ -55,11 +55,15 @@ export default function Footer({ lang }: { lang: Locale }) {
   ];
 
   return (
-    <footer className="mt-24 border-t border-red-100 bg-red-50">
+    <footer className="relative mt-24 overflow-hidden border-t border-white/5 bg-surface">
+      <div
+        aria-hidden
+        className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-red-500 to-transparent"
+      />
       <div className="mx-auto grid max-w-6xl gap-10 px-4 py-12 sm:px-6 md:grid-cols-3">
         <div>
-          <div className="flex items-center gap-2 text-lg font-extrabold text-red-600">
-            <span className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-red-400 to-red-600 text-white">
+          <div className="flex items-center gap-2 text-lg font-black text-ink-900">
+            <span className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-red-400 to-red-600 text-background">
               {SITE_LOGO_MARK}
             </span>
             <span dir="ltr">{SITE_NAME}</span>
@@ -76,7 +80,7 @@ export default function Footer({ lang }: { lang: Locale }) {
               <li key={link.href}>
                 <Link
                   href={localePath(lang, link.href)}
-                  className="text-sm text-ink-500 transition-colors hover:text-red-600"
+                  className="text-sm text-ink-500 transition-colors hover:text-red-400"
                 >
                   {link.label}
                 </Link>
@@ -97,7 +101,7 @@ export default function Footer({ lang }: { lang: Locale }) {
                   aria-label={channel.label}
                   title={channel.label}
                   // 44px: with no text beside it the icon is the whole tap target.
-                  className="flex h-11 w-11 items-center justify-center rounded-full bg-white text-red-500 transition-colors hover:bg-red-100 hover:text-red-600"
+                  className="flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-background text-ink-700 transition-colors hover:border-red-500 hover:bg-red-500 hover:text-background"
                 >
                   <channel.icon className="h-5 w-5" />
                 </a>
@@ -107,7 +111,15 @@ export default function Footer({ lang }: { lang: Locale }) {
         </div>
       </div>
 
-      <div className="border-t border-red-100 px-4 py-4 text-center text-xs text-ink-500 sm:px-6">
+      <div
+        aria-hidden
+        dir="ltr"
+        className="text-outline pointer-events-none select-none overflow-hidden whitespace-nowrap text-center text-[10.5vw] font-black uppercase leading-[0.85] tracking-tighter"
+      >
+        {SITE_NAME}
+      </div>
+
+      <div className="relative border-t border-white/5 px-4 py-4 text-center text-xs text-ink-500 sm:px-6">
         © {new Date().getFullYear()} <span dir="ltr">{SITE_NAME}</span>. {t.rights}
       </div>
     </footer>

@@ -58,14 +58,14 @@ export default async function ContactPage() {
 
       <section className="py-16">
         <Container className="grid gap-10 md:grid-cols-[1fr_1.4fr]">
-          <FadeIn className="flex flex-col gap-4">
+          <FadeIn className="flex flex-col gap-4 md:sticky md:top-24 md:self-start">
             {contactInfo.map((item) => (
               <div
                 key={item.label}
-                className="flex items-center gap-4 rounded-3xl border border-red-100 bg-white p-5 text-start"
+                className="flex items-center gap-4 rounded-3xl border border-white/[0.06] bg-surface p-5 text-start transition-colors hover:border-red-500/40"
               >
-                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-red-100 text-red-600">
-                  <item.icon className="h-5 w-5" strokeWidth={1.75} />
+                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-red-500 text-background shadow-lg shadow-red-500/30">
+                  <item.icon className="h-5 w-5" strokeWidth={2} />
                 </span>
                 <div>
                   <div className="text-xs text-ink-500">{item.label}</div>
@@ -73,7 +73,7 @@ export default async function ContactPage() {
                     <a
                       href={item.href}
                       dir="ltr"
-                      className="block text-base font-extrabold text-red-600 transition-colors hover:text-red-700"
+                      className="block text-lg font-black text-red-400 transition-colors hover:text-red-300"
                     >
                       {item.value}
                     </a>

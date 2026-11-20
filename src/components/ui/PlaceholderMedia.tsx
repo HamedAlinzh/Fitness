@@ -2,11 +2,13 @@ import Image from "next/image";
 import type { LucideIcon } from "lucide-react";
 import { cn } from "@/lib/cn";
 
+// Deep tones rather than the bright accent: on the dark site a wall of hot-pink tiles
+// out-shouts the content around it. The icon carries the colour instead.
 const gradients = [
-  "from-red-300 to-red-500",
-  "from-red-400 to-red-600",
-  "from-red-200 to-red-400",
-  "from-red-500 to-red-700",
+  "from-red-900 to-surface-2",
+  "from-red-800/80 to-red-900/40",
+  "from-surface-2 to-red-900",
+  "from-red-900/70 via-surface-2 to-red-800/60",
 ];
 
 export default function PlaceholderMedia({
@@ -17,6 +19,7 @@ export default function PlaceholderMedia({
   className,
   fit = "cover",
   sizes = "400px",
+  priority = false,
 }: {
   icon: LucideIcon;
   variant?: number;
@@ -31,6 +34,8 @@ export default function PlaceholderMedia({
    */
   fit?: "cover" | "contain";
   sizes?: string;
+  /** For an above-the-fold image (the hero), so it isn't lazy-loaded. */
+  priority?: boolean;
 }) {
   if (src) {
     return (
@@ -40,6 +45,7 @@ export default function PlaceholderMedia({
           alt={alt}
           fill
           sizes={sizes}
+          priority={priority}
           className={fit === "contain" ? "object-contain" : "object-cover"}
         />
       </div>
@@ -56,7 +62,7 @@ export default function PlaceholderMedia({
         className
       )}
     >
-      <Icon className="h-8 w-8 text-white/90" strokeWidth={1.75} />
+      <Icon className="h-8 w-8 text-red-300/80" strokeWidth={1.75} />
     </div>
   );
 }

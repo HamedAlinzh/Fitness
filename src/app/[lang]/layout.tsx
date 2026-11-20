@@ -6,6 +6,7 @@ import Navbar from "@/components/shared/Navbar";
 import Footer from "@/components/shared/Footer";
 import ViewPixel from "@/components/analytics/ViewPixel";
 import LanguageSuggestion from "@/components/shared/LanguageSuggestion";
+import FloatingWhatsApp from "@/components/shared/FloatingWhatsApp";
 import { SITE_NAME } from "@/lib/brand";
 import { LOCALES, dirOf, isLocale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
@@ -50,12 +51,13 @@ export default async function SiteLayout({
     <html
       lang={lang}
       dir={dirOf(lang)}
-      className={`${vazirmatn.variable} h-full antialiased`}
+      className={`${vazirmatn.variable} theme-dark h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
         <Navbar lang={lang} />
         <main className="flex-1">{children}</main>
         <Footer lang={lang} />
+        <FloatingWhatsApp lang={lang} />
         {lang === "fa" && <LanguageSuggestion />}
         {/* Public pages only — the admin panel has its own layout and is never counted. */}
         <ViewPixel />

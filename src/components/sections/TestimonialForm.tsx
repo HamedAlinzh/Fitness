@@ -22,7 +22,7 @@ export default function TestimonialForm() {
     <form
       ref={formRef}
       action={action}
-      className="flex flex-col gap-4 rounded-3xl border border-red-100 bg-white p-6 text-start sm:p-8"
+      className="flex flex-col gap-4 rounded-3xl border border-red-100 bg-surface p-6 text-start sm:p-8"
     >
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="flex flex-col gap-1.5">
@@ -92,7 +92,7 @@ export default function TestimonialForm() {
       <button
         type="submit"
         disabled={pending}
-        className="mt-2 inline-flex items-center justify-center gap-2 rounded-full bg-red-500 px-6 py-3 text-sm font-bold text-white shadow-lg shadow-red-300/60 transition-colors hover:bg-red-600 disabled:opacity-60"
+        className="mt-2 inline-flex items-center justify-center gap-2 rounded-full bg-red-500 px-6 py-3 text-sm font-bold text-background shadow-lg shadow-red-500/30 transition-colors hover:bg-red-400 disabled:opacity-60"
       >
         <Send className="h-4 w-4" />
         {pending ? "در حال ثبت…" : "ثبت نظر"}
