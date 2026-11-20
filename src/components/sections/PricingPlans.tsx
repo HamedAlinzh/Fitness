@@ -28,7 +28,7 @@ export default async function PricingPlans({ plans }: { plans: PackageData[] }) 
             {t.empty}
           </p>
         ) : (
-          <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
+          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
             {plans.map((plan, index) => (
               <FadeIn key={plan.id} delay={index * 0.1}>
                 <PricingCard plan={plan} />

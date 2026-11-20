@@ -26,9 +26,9 @@ export default async function ContactBand() {
   return (
     <section className="py-12">
       <Container>
-        <div className="flex flex-col items-center gap-5 rounded-3xl border border-red-100 bg-surface p-8 text-center sm:p-10">
+        <div className="flex flex-col items-center gap-5 relative overflow-hidden rounded-[2.5rem] border border-red-500/30 bg-gradient-to-b from-red-900/30 to-surface p-8 text-center sm:p-14">
           <div className="flex flex-col gap-2">
-            <h2 className="text-xl font-extrabold text-ink-900 sm:text-2xl">
+            <h2 className="text-2xl font-black text-ink-900 sm:text-3xl">
               {band.title}
             </h2>
             <p className="mx-auto max-w-xl text-sm leading-7 text-ink-500">
@@ -39,7 +39,7 @@ export default async function ContactBand() {
           <a
             href={telUrl(COACH_PHONE)}
             dir="ltr"
-            className="text-3xl font-extrabold tracking-wider text-red-600 transition-colors hover:text-red-700 sm:text-4xl"
+            className="text-4xl font-black tracking-wider text-red-400 transition-colors hover:text-red-300 sm:text-6xl"
           >
             {lang === "fa" ? COACH_PHONE_DISPLAY : COACH_PHONE_DISPLAY_INTL}
           </a>
@@ -47,7 +47,7 @@ export default async function ContactBand() {
           <div className="flex flex-wrap justify-center gap-3">
             <a
               href={telUrl(COACH_PHONE)}
-              className="inline-flex items-center gap-2 rounded-full bg-red-500 px-6 py-3 text-sm font-bold text-white shadow-lg shadow-red-300/60 transition-colors hover:bg-red-600"
+              className="inline-flex items-center gap-2 rounded-full bg-red-500 px-7 py-3.5 text-sm font-bold text-background shadow-lg shadow-red-500/30 transition-colors hover:bg-red-400"
             >
               <Phone className="h-4 w-4" />
               {band.directCall}
@@ -56,7 +56,7 @@ export default async function ContactBand() {
               href={whatsappUrl(COACH_PHONE, band.message)}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 rounded-full border border-red-200 px-6 py-3 text-sm font-bold text-red-600 transition-colors hover:bg-red-50"
+              className="inline-flex items-center gap-2 rounded-full border border-white/15 px-7 py-3.5 text-sm font-bold text-ink-900 transition-colors hover:border-red-400 hover:text-red-400"
             >
               <MessageCircle className="h-4 w-4" />
               {band.whatsapp}
@@ -67,7 +67,7 @@ export default async function ContactBand() {
             {band.formPrompt}{" "}
             <Link
               href={localePath(lang, "/contact")}
-              className="font-semibold text-red-600 underline underline-offset-4 hover:text-red-700"
+              className="font-semibold text-red-400 underline underline-offset-4 hover:text-red-300"
             >
               {band.formLink}
             </Link>{" "}

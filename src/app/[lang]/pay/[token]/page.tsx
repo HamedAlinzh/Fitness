@@ -143,7 +143,7 @@ export default async function PayPage({ params }: PageProps<"/[lang]/pay/[token]
             <div className="mt-1 flex flex-wrap gap-2">
               <a
                 href={telUrl(COACH_PHONE)}
-                className="inline-flex items-center gap-2 rounded-full bg-red-500 px-5 py-2.5 text-sm font-bold text-white shadow-lg shadow-red-300/60 transition-colors hover:bg-red-600"
+                className="inline-flex items-center gap-2 rounded-full bg-red-500 px-5 py-2.5 text-sm font-bold text-background shadow-lg shadow-red-500/30 transition-colors hover:bg-red-400"
               >
                 <Phone className="h-4 w-4" />
                 تماس

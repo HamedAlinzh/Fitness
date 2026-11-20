@@ -48,7 +48,7 @@ const LAST_STEP = TOTAL_STEPS - 1;
 const stepId = (i: number) => `wz-${i}`;
 
 const NAV_NEXT =
-  "cursor-pointer select-none items-center gap-2 rounded-full bg-red-500 px-6 py-3 text-sm font-bold text-white shadow-lg shadow-red-300/60 transition-colors hover:bg-red-600 [--wz-display:inline-flex]";
+  "cursor-pointer select-none items-center gap-2 rounded-full bg-red-500 px-6 py-3 text-sm font-bold text-background shadow-lg shadow-red-500/30 transition-colors hover:bg-red-400 [--wz-display:inline-flex]";
 const NAV_BACK =
   "cursor-pointer select-none items-center gap-2 rounded-full px-4 py-2.5 text-sm font-semibold text-ink-500 transition-colors hover:bg-red-50 hover:text-red-600 [--wz-display:inline-flex]";
 
@@ -432,7 +432,7 @@ export default function ConsultationForm({ lang }: { lang: Locale }) {
           data-wz-step={LAST_STEP}
           type="submit"
           disabled={pending}
-          className="cursor-pointer items-center gap-2 rounded-full bg-red-500 px-6 py-3 text-sm font-bold text-white shadow-lg shadow-red-300/60 transition-colors hover:bg-red-600 disabled:opacity-60 [--wz-display:inline-flex]"
+          className="cursor-pointer items-center gap-2 rounded-full bg-red-500 px-6 py-3 text-sm font-bold text-background shadow-lg shadow-red-500/30 transition-colors hover:bg-red-400 disabled:opacity-60 [--wz-display:inline-flex]"
         >
           <Send className="h-4 w-4" />
           {pending ? t.sending : t.submit}

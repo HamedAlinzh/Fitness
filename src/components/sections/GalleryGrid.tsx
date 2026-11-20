@@ -41,8 +41,8 @@ export default function GalleryGrid({
               className={cn(
                 "rounded-full px-5 py-2 text-sm font-bold transition-colors",
                 active === tab.key
-                  ? "bg-red-500 text-white"
-                  : "bg-red-50 text-red-600 hover:bg-red-100"
+                  ? "bg-red-500 text-background"
+                  : "border border-white/10 text-ink-700 hover:border-red-400 hover:text-red-400"
               )}
             >
               {tab.label}

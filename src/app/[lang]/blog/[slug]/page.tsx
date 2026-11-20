@@ -81,18 +81,18 @@ export default async function BlogPostPage({ params }: PageProps<"/[lang]/blog/[
           variant={variant}
           src={post.coverImage}
           alt={post.title}
-          className="aspect-[16/9] w-full rounded-3xl"
+          className="aspect-[16/9] w-full rounded-[2rem] border border-white/[0.06]"
         />
 
         <div className="flex flex-col gap-4 text-start">
-          <span className="flex items-center gap-1 text-xs text-ink-500">
+          <span className="flex w-fit items-center gap-1.5 rounded-full border border-red-500/30 bg-red-500/10 px-3 py-1 text-xs font-semibold text-red-300">
             <Clock className="h-3.5 w-3.5" />
             {readTime(post.content)}
           </span>
-          <h1 className="text-3xl font-extrabold text-ink-900">{post.title}</h1>
+          <h1 className="text-3xl font-black leading-tight tracking-tight text-ink-900 sm:text-5xl">{post.title}</h1>
         </div>
 
-        <div className="flex flex-col gap-5 text-start leading-8 text-ink-700">
+        <div className="flex flex-col gap-6 border-t border-white/[0.06] pt-8 text-start text-lg leading-9 text-ink-700">
           {paragraphs.map((paragraph, index) => (
             <p key={index}>{paragraph}</p>
           ))}

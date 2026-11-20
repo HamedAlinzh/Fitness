@@ -62,7 +62,7 @@ export default function LanguageSuggestion() {
         <Link
           href="/en"
           onClick={() => rememberLocale("en")}
-          className="rounded-full bg-red-500 px-4 py-1.5 text-xs font-bold text-white hover:bg-red-600"
+          className="rounded-full bg-red-500 px-4 py-1.5 text-xs font-bold text-background hover:bg-red-400"
         >
           {text.accept}
         </Link>

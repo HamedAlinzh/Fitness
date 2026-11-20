@@ -92,7 +92,7 @@ export default function TestimonialForm() {
       <button
         type="submit"
         disabled={pending}
-        className="mt-2 inline-flex items-center justify-center gap-2 rounded-full bg-red-500 px-6 py-3 text-sm font-bold text-white shadow-lg shadow-red-300/60 transition-colors hover:bg-red-600 disabled:opacity-60"
+        className="mt-2 inline-flex items-center justify-center gap-2 rounded-full bg-red-500 px-6 py-3 text-sm font-bold text-background shadow-lg shadow-red-500/30 transition-colors hover:bg-red-400 disabled:opacity-60"
       >
         <Send className="h-4 w-4" />
         {pending ? "در حال ثبت…" : "ثبت نظر"}
