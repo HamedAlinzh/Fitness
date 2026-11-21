@@ -11,6 +11,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - `pnpm start` — run the production build
 - `pnpm lint` — ESLint (flat config extending `eslint-config-next` core-web-vitals + typescript)
 - No test suite is configured in this repo yet.
+- `pnpm ship` — deploy to production from your own machine (`deploy/ship.sh`): refuses unless you are on a clean, up-to-date `main`, pushes it, runs `deploy/deploy.sh` on the VPS over SSH and checks the live site. The VPS serves a copy of the build at `/var/www/Fitness-release` (not `.next/standalone`, which `next build` wipes), so a failed build never touches the running site and a release that fails the smoke test is rolled back to the previous one.
 - **The package manager is pnpm** (`packageManager` in `package.json`, lockfile `pnpm-lock.yaml`; there is no `package-lock.json`). `pnpm-workspace.yaml` matters for production: `allowBuilds` lets native dependencies run their install scripts, and `nodeLinker: hoisted` gives a flat npm-style `node_modules` — with pnpm's default symlinked layout the `output: "standalone"` build that `deploy/deploy.sh` runs is missing transitive files and `server.js` crashes on start (`Cannot find module …/@swc/helpers`). After changing either setting, run `pnpm install` and restart `pnpm dev`, since a running dev server keeps the old module paths and 500s.
 
 ### Database (Prisma + SQLite)

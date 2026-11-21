@@ -60,4 +60,9 @@ echo "30 3 * * * root $APP/deploy/backup-db.sh >> /var/log/fitness-backup.log 2>
   > /etc/cron.d/fitness-backup
 chmod 644 /etc/cron.d/fitness-backup
 
+echo "==> monthly refresh of Cloudflare ranges (1st of the month, 04:17)"
+echo "17 4 1 * * root bash $APP/deploy/cloudflare-realip.sh >> /var/log/fitness-cloudflare.log 2>&1" \
+  > /etc/cron.d/fitness-cloudflare-ips
+chmod 644 /etc/cron.d/fitness-cloudflare-ips
+
 echo "setup done. Next: $APP/deploy/deploy.sh"

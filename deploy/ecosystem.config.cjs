@@ -11,7 +11,9 @@ module.exports = {
   apps: [
     {
       name: "Fitness",
-      cwd: "/var/www/Fitness/.next/standalone",
+      // A copy of .next/standalone made by deploy.sh, so `next build` cannot delete the
+      // files of the running site from under it.
+      cwd: "/var/www/Fitness-release",
       script: "server.js",
       env: {
         NODE_ENV: "production",

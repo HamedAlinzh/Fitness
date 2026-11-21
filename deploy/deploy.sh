@@ -42,7 +42,7 @@ echo "==> build"
 rm -rf .next/standalone
 pnpm run build
 
-echo "==> assemble standalone"
+echo "==> assemble release"
 # `next build` standalone output does not include public/ or .next/static.
 STANDALONE="$APP/.next/standalone"
 cp -r public "$STANDALONE/"
@@ -55,17 +55,54 @@ mkdir -p "$DATA/uploads"
 rm -rf "$STANDALONE/public/uploads"
 ln -sfn "$DATA/uploads" "$STANDALONE/public/uploads"
 
-echo "==> restart"
-# delete + start (not reload) so changed settings such as HOSTNAME really apply.
-pm2 delete Fitness 2>/dev/null || true
-pm2 start "$APP/deploy/ecosystem.config.cjs"
-pm2 save
+# The site is served from a copy outside .next ($RELEASE, see ecosystem.config.cjs).
+# `next build` wipes .next as it starts, so serving from .next/standalone meant the live
+# site lost its files for the whole build, and a failed build left it broken.
+# Now a failed build never touches what is running, and the previous release is kept
+# for rolling back.
+RELEASE=/var/www/Fitness-release
+rm -rf "$RELEASE.next"
+cp -a "$STANDALONE" "$RELEASE.next"
+
+restart() {
+  # delete + start (not reload) so changed settings such as HOSTNAME really apply.
+  pm2 delete Fitness >/dev/null 2>&1 || true
+  pm2 start "$APP/deploy/ecosystem.config.cjs"
+  pm2 save
+}
+
+smoke_test() {
+  for path in / /en /about /en/pricing; do
+    code=000
+    # The server needs a moment to start; retry for up to ~20s before calling it broken.
+    for _ in $(seq 1 20); do
+      code=$(curl -s -o /dev/null -w "%{http_code}" "http://localhost:3000$path" || true)
+      [ "$code" = "200" ] && break
+      sleep 1
+    done
+    echo "$path -> $code"
+    [ "$code" = "200" ] || return 1
+  done
+}
+
+echo "==> switch to new release"
+rm -rf "$RELEASE.prev"
+[ -d "$RELEASE" ] && mv "$RELEASE" "$RELEASE.prev"
+mv "$RELEASE.next" "$RELEASE"
+restart
 
 echo "==> smoke test"
-sleep 3
-for path in / /en /about /en/pricing; do
-  code=$(curl -s -o /dev/null -w "%{http_code}" "http://localhost:3000$path")
-  echo "$path -> $code"
-  [ "$code" = "200" ] || { echo "smoke test failed on $path"; exit 1; }
-done
+if ! smoke_test; then
+  if [ -d "$RELEASE.prev" ]; then
+    echo "smoke test failed: rolling back to the previous release"
+    rm -rf "$RELEASE.failed"
+    mv "$RELEASE" "$RELEASE.failed"
+    mv "$RELEASE.prev" "$RELEASE"
+    restart
+    smoke_test || echo "the previous release is failing too; check: pm2 logs Fitness"
+    echo "the failed build is kept at $RELEASE.failed"
+  fi
+  echo "DEPLOY FAILED"
+  exit 1
+fi
 echo "deployed $(git rev-parse --short HEAD)"
