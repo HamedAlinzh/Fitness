@@ -52,6 +52,9 @@ PY
   nginx -t && systemctl reload nginx
 fi
 
+echo "==> nginx: real visitor address behind Cloudflare"
+bash "$APP/deploy/cloudflare-realip.sh"
+
 echo "==> daily backup (03:30)"
 echo "30 3 * * * root $APP/deploy/backup-db.sh >> /var/log/fitness-backup.log 2>&1" \
   > /etc/cron.d/fitness-backup

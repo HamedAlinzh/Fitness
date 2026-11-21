@@ -168,6 +168,13 @@ export function visitorHashFor(
  * Behind nginx on the VPS the client address arrives in `x-forwarded-for`; the first
  * entry is the original client. Falls back to a constant so a missing header groups
  * those visits together rather than counting each hit as a new person.
+ *
+ * The site is also behind Cloudflare, so nginx's own peer address is a Cloudflare
+ * edge that changes between requests. nginx resolves the real visitor first (realip
+ * from `CF-Connecting-IP`, trusted only from Cloudflare's ranges; see
+ * deploy/cloudflare-realip.sh). Without that, one device counts as a new unique visitor
+ * on nearly every view. Don't read `cf-connecting-ip` here instead: anyone can connect
+ * to the server's IP directly and set it.
  */
 export function clientIpFrom(headers: Headers): string {
   const forwarded = headers.get("x-forwarded-for");
