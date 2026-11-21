@@ -9,24 +9,38 @@ APP=/var/www/Fitness
 DATA=/var/www/Fitness-data
 cd "$APP"
 
-echo "==> backup"
-"$APP/deploy/backup-db.sh"
+# The reset below can replace this very script. Re-run the freshly fetched copy once, so
+# a deploy always follows the steps of the code it is deploying, not of the previous one.
+if [ "${DEPLOY_FETCHED:-}" != "1" ]; then
+  echo "==> backup"
+  "$APP/deploy/backup-db.sh"
 
-echo "==> fetch code"
-git fetch origin main
-# The server tree must mirror GitHub. Untracked/ignored files (.env, the database, uploads)
-# are not touched by a hard reset.
-git reset --hard origin/main
+  echo "==> fetch code"
+  git fetch origin main
+  # The server tree must mirror GitHub. Untracked/ignored files (.env, the database, uploads)
+  # are not touched by a hard reset.
+  git reset --hard origin/main
+  DEPLOY_FETCHED=1 exec "$APP/deploy/deploy.sh"
+fi
 
 echo "==> dependencies"
-npm ci
+# pnpm-lock.yaml is the lockfile; allowBuilds in pnpm-workspace.yaml lets better-sqlite3
+# compile its native binding (without it every page 500s on "Could not locate the
+# bindings file"). The version matches packageManager in package.json.
+PNPM_VERSION=$(node -p "require('./package.json').packageManager.split('@')[1]")
+if [ "$(pnpm --version 2>/dev/null)" != "$PNPM_VERSION" ]; then
+  npm install -g "pnpm@$PNPM_VERSION"
+fi
+pnpm install --frozen-lockfile
 
 echo "==> database"
-npx prisma generate
-npx prisma migrate deploy
+pnpm exec prisma generate
+pnpm exec prisma migrate deploy
 
 echo "==> build"
-npm run build
+# A stale standalone tree from an npm-era build would otherwise keep its old node_modules.
+rm -rf .next/standalone
+pnpm run build
 
 echo "==> assemble standalone"
 # `next build` standalone output does not include public/ or .next/static.

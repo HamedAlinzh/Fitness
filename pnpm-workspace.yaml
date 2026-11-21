@@ -1,3 +1,10 @@
+# A flat, npm-style node_modules. With pnpm's default symlinked layout, `next build`'s
+# standalone output misses transitive files (server.js dies on a missing
+# @swc/helpers), and deploy/ecosystem.config.cjs runs that standalone server.
+nodeLinker: hoisted
+
+# Packages allowed to run install scripts. better-sqlite3 must compile its native
+# binding, or every database page 500s with "Could not locate the bindings file".
 allowBuilds:
   '@prisma/engines': true
   better-sqlite3: true
